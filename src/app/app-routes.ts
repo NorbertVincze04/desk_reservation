@@ -4,7 +4,15 @@ import { BookingComponent } from './booking/booking.component';
 import { InformationComponent } from './information/information.component';
 
 export const routes: Routes = [
-  { path: '', component: BookingComponent },
+  {
+    path: '',
+    redirectTo: 'booking',
+    pathMatch: 'full',
+  },
+  {
+    path: 'booking',
+    component: BookingComponent,
+  },
   { path: 'info', component: InformationComponent },
   { path: '**', component: NotFoundComponent },
 ];
