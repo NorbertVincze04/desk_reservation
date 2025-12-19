@@ -1,7 +1,0 @@
-.booking {
-  height: 400px;
-  margin-top: 25px;
-  display: grid;
-  grid-template-columns: 1fr 2fr;
-  gap: 25px;
-}
