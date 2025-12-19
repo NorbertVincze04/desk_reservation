@@ -1,10 +1,8 @@
 header {
-  background-color: rgb(255, 255, 255);
   height: 50px;
-  padding-left: 15px;
+  padding-left: 20px;
   padding-right: 20px;
   border-top: 7px solid rgb(58, 152, 240);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   display: flex;
   justify-content: space-between;
   align-items: center;
