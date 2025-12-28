@@ -1,0 +1,61 @@
+/* Container adjustments */
+::ng-deep .custom-minimal-datepicker.p-datepicker-inline {
+  border: none;
+  background: transparent;
+  padding: 0;
+  width: 100%;
+}
+
+/* Header (Month/Year Nav) */
+::ng-deep .custom-minimal-datepicker .p-datepicker-header {
+  background: transparent;
+  border: none;
+  padding: 1rem 0;
+  justify-content: space-between;
+}
+
+/* Day Names (S M T W T F S) */
+::ng-deep .custom-minimal-datepicker .p-datepicker-calendar-container th {
+  padding: 1rem 0;
+  color: #333;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+/* Individual Day Cells */
+::ng-deep .custom-minimal-datepicker .p-datepicker-calendar td {
+  padding: 0.5rem 0;
+}
+
+::ng-deep .custom-minimal-datepicker .p-datepicker-calendar td > span {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%; /* Makes the selection circular like the image */
+  transition: background-color 0.2s;
+  font-weight: 500;
+  color: #666;
+}
+
+/* Selected Date Style (The circle in the image) */
+::ng-deep
+  .custom-minimal-datepicker
+  .p-datepicker-calendar
+  td
+  > span.p-highlight {
+  background-color: #a0a0a0 !important; /* The grey circle in your image */
+  color: white !important;
+}
+
+/* Days from other months (lighter grey) */
+::ng-deep .custom-minimal-datepicker .p-datepicker-other-month {
+  opacity: 0.3;
+}
+
+/* Remove hover background for a cleaner look */
+::ng-deep
+  .custom-minimal-datepicker
+  .p-datepicker-calendar
+  td
+  > span:not(.p-highlight):hover {
+  background: #f0f0f0;
+}

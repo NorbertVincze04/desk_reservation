@@ -1,0 +1,19 @@
+.information {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.title {
+  text-align: center;
+}
+
+h5 {
+  padding: 10px;
+  font-size: 15px;
+}
+
+.table {
+  display: flex;
+  justify-content: center;
+}
