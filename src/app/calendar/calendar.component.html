@@ -1,5 +1,14 @@
-<p-datepicker
-  class="max-w-full custom-minimal-datepicker"
-  [(ngModel)]="date"
-  [inline]="true"
-/>
+<form [formGroup]="formGroup">
+  <p-datepicker
+    formControlName="date"
+    [minDate]="minDate"
+    [disabledDays]="disabledDays"
+    [readonlyInput]="true"
+    [inline]="true"
+  />
+
+  <div *ngIf="warningMessage" class="message-box warning">
+    <i class="pi pi-exclamation-triangle"></i>
+    <span>{{ warningMessage }}</span>
+  </div>
+</form>
