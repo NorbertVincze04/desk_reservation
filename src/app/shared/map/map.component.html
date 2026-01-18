@@ -8,32 +8,15 @@
   </div>
 
   <div class="office">
-    <div class="group">
-      <div class="desk">A1</div>
-      <div class="desk">A2</div>
-      <div class="desk">A3</div>
-      <div class="desk">A4</div>
-    </div>
-
-    <div class="group">
-      <div class="desk">B1</div>
-      <div class="desk">B2</div>
-      <div class="desk">B3</div>
-      <div class="desk">B4</div>
-    </div>
-
-    <div class="group">
-      <div class="desk">C1</div>
-      <div class="desk">C2</div>
-      <div class="desk">C3</div>
-      <div class="desk">C4</div>
-    </div>
-
-    <div class="group">
-      <div class="desk">D1</div>
-      <div class="desk">D2</div>
-      <div class="desk">D3</div>
-      <div class="desk">D4</div>
+    <div class="group" *ngFor="let group of officeGroups">
+      <div
+        class="desk"
+        *ngFor="let num of deskNumbers"
+        [ngClass]="getStatus(group, num)"
+        (click)="toggleDesk(group, num)"
+      >
+        {{ group }}{{ num }}
+      </div>
     </div>
   </div>
 
