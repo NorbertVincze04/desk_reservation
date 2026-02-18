@@ -21,12 +21,27 @@ export class CalendarComponent implements OnInit {
     const today = new Date();
     this.minDate = today;
 
-    this.limitDate = new Date();
-    this.limitDate.setDate(today.getDate() + 3);
+    this.limitDate = this.calculateLimitDays(today, 3);
 
     this.formGroup.get('date')?.valueChanges.subscribe((selectedDate: Date) => {
       this.validateBookingDate(selectedDate);
     });
+  }
+
+  calculateLimitDays(startDate: Date, daysToAdd: number): Date {
+    let resultDate = new Date(startDate);
+    let addedDays = 0;
+
+    while (addedDays < daysToAdd) {
+      resultDate.setDate(resultDate.getDate() + 1);
+      const dayOfWeek = resultDate.getDay();
+
+      if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+        addedDays++;
+      }
+    }
+
+    return resultDate;
   }
 
   validateBookingDate(date: Date | null) {
