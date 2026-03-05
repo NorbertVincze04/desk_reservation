@@ -3,12 +3,11 @@
     <th>User Name</th>
     <th>Desk Name</th>
   </tr>
-  <tr>
-    <td>Vincze Norbert</td>
-    <td>A1</td>
+  <tr *ngFor="let b of bookings">
+    <td>{{ b.user }}</td>
+    <td>{{ b.deskId }}</td>
   </tr>
-  <tr>
-    <td>Vincze Norbert</td>
-    <td>A1</td>
+  <tr *ngIf="bookings.length === 0">
+    <td colspan="2" class="no-bookings">No registrations yet</td>
   </tr>
 </table>

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { BookingService } from '../shared/booking.service';
 
 @Component({
   selector: 'app-calendar',
@@ -13,6 +14,8 @@ export class CalendarComponent implements OnInit {
   warningMessage: string | null = null;
   limitDate!: Date;
 
+  constructor(private bookingService: BookingService) {}
+
   ngOnInit() {
     this.formGroup = new FormGroup({
       date: new FormControl<Date | null>(null),
@@ -25,6 +28,8 @@ export class CalendarComponent implements OnInit {
 
     this.formGroup.get('date')?.valueChanges.subscribe((selectedDate: Date) => {
       this.validateBookingDate(selectedDate);
+      const valid = selectedDate != null && this.warningMessage === null;
+      this.bookingService.selectDate(selectedDate, valid);
     });
   }
 

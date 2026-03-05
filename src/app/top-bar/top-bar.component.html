@@ -1,11 +1,29 @@
 <app-shadow-box>
   <div class="top-bar">
-    <h5>Current booking - No desk booked</h5>
+    <h5 *ngIf="bookedDesk; else sel">
+      You already booked {{ bookedDesk }} on
+      {{ currentDate | date: "shortDate" }}
+    </h5>
+    <ng-template #sel>
+      <h5 *ngIf="currentDesk; else none">
+        Current booking - {{ currentDesk }}
+        <span *ngIf="currentDate"
+          >on {{ currentDate | date: "shortDate" }}</span
+        >
+      </h5>
+      <ng-template #none>
+        <h5>Current booking - No desk booked</h5>
+      </ng-template>
+    </ng-template>
+
     <div class="right">
-      <button>Book Now</button>
+      <button (click)="bookNow()" [class.withdraw]="!!bookedDesk">
+        {{ buttonLabel }}
+      </button>
       <a routerLink="/info"
         ><i class="fas fa-info fa-lg" style="color: #000000"></i
       ></a>
     </div>
+    <div class="error" *ngIf="errorMessage">{{ errorMessage }}</div>
   </div>
 </app-shadow-box>

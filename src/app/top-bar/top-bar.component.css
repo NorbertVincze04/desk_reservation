@@ -5,6 +5,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: relative;
 }
 
 h5 {
@@ -12,17 +13,38 @@ h5 {
 }
 
 button {
-  background-color: rgb(58, 152, 240);
+  background-color: #007bc0;
   color: white;
   border: 0;
   height: 30px;
-  width: 75px;
+  width: 80px;
   margin-right: 25px;
 }
 
 button:hover {
   cursor: pointer;
-  background-color: rgb(52, 138, 218);
+  background-color: #007bc0;
+}
+
+button.withdraw {
+  background-color: rgb(255, 255, 255);
+  border: 2px solid #ff0000;
+  color: #ff0000;
+  width: 120px;
+}
+
+button.withdraw:hover {
+  background-color: #ff0000;
+  color: white;
+}
+
+.error {
+  position: absolute;
+  right: 150px;
+  text-align: center;
+  background-color: #f0eded;
+  color: #ff0000;
+  width: 200px;
 }
 
 a {
