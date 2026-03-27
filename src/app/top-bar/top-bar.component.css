@@ -23,7 +23,7 @@ button {
 
 button:hover {
   cursor: pointer;
-  background-color: #007bc0;
+  background-color: #0366a0;
 }
 
 button.withdraw {
@@ -40,7 +40,7 @@ button.withdraw:hover {
 
 .error {
   position: absolute;
-  right: 150px;
+  right: 175px;
   text-align: center;
   background-color: #f0eded;
   color: #ff0000;
