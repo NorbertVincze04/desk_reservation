@@ -23,7 +23,7 @@ button {
 
 button:hover {
   cursor: pointer;
-  background-color: #007bc0;
+  background-color: #0366a0;
 }
 
 button.withdraw {
