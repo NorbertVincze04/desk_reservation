@@ -8,7 +8,7 @@ import { BookingService } from '../shared/booking.service';
 })
 export class TopBarComponent {
   errorMessage: string | null = null;
-  private readonly user = 'Vincze Norbert';
+  private readonly user = 'Jhon Doe';
 
   constructor(public bookingService: BookingService) {}
 

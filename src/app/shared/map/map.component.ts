@@ -9,7 +9,7 @@ import { BookingService } from '../booking.service';
 export class MapComponent {
   officeGroups = ['A', 'B', 'C', 'D'];
   deskNumbers = [1, 2, 3, 4];
-  private user = 'Vincze Norbert';
+  private user = 'Jhon Doe';
 
   constructor(public bookingService: BookingService) {}
 
