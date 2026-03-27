@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
 
 export interface Booking {
   user: string;
@@ -11,30 +10,22 @@ export interface Booking {
   providedIn: 'root',
 })
 export class BookingService {
-  private selectedDeskSubject = new BehaviorSubject<string | null>(null);
-  selectedDesk$ = this.selectedDeskSubject.asObservable();
-
-  private selectedDateSubject = new BehaviorSubject<Date | null>(null);
-  selectedDate$ = this.selectedDateSubject.asObservable();
-
-  private selectedDateValidSubject = new BehaviorSubject<boolean>(true);
-  selectedDateValid$ = this.selectedDateValidSubject.asObservable();
-
-  private bookingsSubject = new BehaviorSubject<Booking[]>([]);
-  bookings$ = this.bookingsSubject.asObservable();
+  selectedDesk: string | null = null;
+  selectedDate: Date | null = null;
+  selectedDateValid = true;
+  bookings: Booking[] = [];
 
   selectDesk(deskId: string | null) {
-    this.selectedDeskSubject.next(deskId);
+    this.selectedDesk = deskId;
   }
 
   selectDate(date: Date | null, valid: boolean = true) {
-    this.selectedDateSubject.next(date);
-    this.selectedDateValidSubject.next(valid);
+    this.selectedDate = date;
+    this.selectedDateValid = valid;
   }
 
   addBooking(booking: Booking): boolean {
-    const curr = this.bookingsSubject.value;
-    const exists = curr.find(
+    const exists = this.bookings.find(
       (b) =>
         b.user === booking.user &&
         b.date.toDateString() === booking.date.toDateString(),
@@ -43,32 +34,32 @@ export class BookingService {
       return false;
     }
 
-    this.bookingsSubject.next([...curr, booking]);
+    this.bookings = [...this.bookings, booking];
 
-    if (this.selectedDeskSubject.value === booking.deskId) {
+    if (this.selectedDesk === booking.deskId) {
       this.selectDesk(null);
     }
+
     return true;
   }
 
   removeBooking(user: string, date: Date) {
-    const curr = this.bookingsSubject.value;
-    const filtered = curr.filter(
+    const bookingToRemove = this.bookings.find(
+      (b) => b.user === user && b.date.toDateString() === date.toDateString(),
+    );
+
+    this.bookings = this.bookings.filter(
       (b) =>
         !(b.user === user && b.date.toDateString() === date.toDateString()),
     );
-    this.bookingsSubject.next(filtered);
 
-    const removedDesk = curr.find(
-      (b) => b.user === user && b.date.toDateString() === date.toDateString(),
-    )?.deskId;
-    if (removedDesk && this.selectedDeskSubject.value === removedDesk) {
+    if (bookingToRemove && this.selectedDesk === bookingToRemove.deskId) {
       this.selectDesk(null);
     }
   }
 
   getBookingFor(user: string, date: Date): Booking | undefined {
-    return this.bookingsSubject.value.find(
+    return this.bookings.find(
       (b) => b.user === user && b.date.toDateString() === date.toDateString(),
     );
   }

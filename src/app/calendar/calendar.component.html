@@ -1,10 +1,12 @@
-<form [formGroup]="formGroup">
+<form>
   <p-datepicker
-    formControlName="date"
+    name="date"
+    [(ngModel)]="selectedDate"
     [minDate]="minDate"
     [disabledDays]="disabledDays"
     [readonlyInput]="true"
     [inline]="true"
+    (ngModelChange)="onDateChange($event)"
   />
 
   <div *ngIf="warningMessage" class="message-box warning">

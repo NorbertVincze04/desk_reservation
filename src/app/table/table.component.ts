@@ -1,5 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
-import { combineLatest, Subscription } from 'rxjs';
+import { Component } from '@angular/core';
 import { BookingService, Booking } from '../shared/booking.service';
 
 @Component({
@@ -7,31 +6,19 @@ import { BookingService, Booking } from '../shared/booking.service';
   templateUrl: './table.component.html',
   styleUrl: './table.component.css',
 })
-export class TableComponent implements OnDestroy {
-  bookings: Booking[] = [];
-  private subs: Subscription = new Subscription();
+export class TableComponent {
+  constructor(public bookingService: BookingService) {}
 
   private sameDay(a: Date | undefined, b: Date | null): boolean {
     if (!a || !b) return false;
     return a.toDateString() === b.toDateString();
   }
 
-  constructor(private bookingService: BookingService) {
-    this.subs.add(
-      combineLatest([
-        this.bookingService.bookings$,
-        this.bookingService.selectedDate$,
-      ]).subscribe(([all, date]) => {
-        if (date) {
-          this.bookings = all.filter((b) => this.sameDay(b.date, date));
-        } else {
-          this.bookings = [];
-        }
-      }),
+  get bookings(): Booking[] {
+    const date = this.bookingService.selectedDate;
+    if (!date) return [];
+    return this.bookingService.bookings.filter((b) =>
+      this.sameDay(b.date, date),
     );
-  }
-
-  ngOnDestroy() {
-    this.subs.unsubscribe();
   }
 }

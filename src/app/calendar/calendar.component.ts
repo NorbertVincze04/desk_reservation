@@ -1,5 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { Component } from '@angular/core';
 import { BookingService } from '../shared/booking.service';
 
 @Component({
@@ -7,30 +6,21 @@ import { BookingService } from '../shared/booking.service';
   templateUrl: './calendar.component.html',
   styleUrl: './calendar.component.css',
 })
-export class CalendarComponent implements OnInit {
-  formGroup!: FormGroup;
-  minDate!: Date;
+export class CalendarComponent {
+  selectedDate: Date | null = null;
+  minDate: Date = new Date();
+  limitDate: Date = this.calculateLimitDays(new Date(), 3);
   disabledDays: number[] = [0, 6];
   warningMessage: string | null = null;
-  limitDate!: Date;
 
   constructor(private bookingService: BookingService) {}
 
-  ngOnInit() {
-    this.formGroup = new FormGroup({
-      date: new FormControl<Date | null>(null),
-    });
+  onDateChange(selectedDate: Date | null) {
+    this.selectedDate = selectedDate;
+    this.validateBookingDate(selectedDate);
 
-    const today = new Date();
-    this.minDate = today;
-
-    this.limitDate = this.calculateLimitDays(today, 3);
-
-    this.formGroup.get('date')?.valueChanges.subscribe((selectedDate: Date) => {
-      this.validateBookingDate(selectedDate);
-      const valid = selectedDate != null && this.warningMessage === null;
-      this.bookingService.selectDate(selectedDate, valid);
-    });
+    const valid = selectedDate != null && this.warningMessage === null;
+    this.bookingService.selectDate(selectedDate, valid);
   }
 
   calculateLimitDays(startDate: Date, daysToAdd: number): Date {
