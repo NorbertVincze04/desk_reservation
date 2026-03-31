@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, Observable, tap, map } from 'rxjs';
 
 export interface Booking {
+  id: string;
   user: string;
   deskId: string;
   date: Date;
@@ -11,72 +14,46 @@ export interface Booking {
 })
 export class BookingService {
   selectedDesk: string | null = null;
+  private selectedDateSubject = new BehaviorSubject<Date | null>(null);
+  public selectedDate$ = this.selectedDateSubject.asObservable();
   selectedDate: Date | null = null;
   selectedDateValid = true;
-  bookings: Booking[] = [];
+  private bookingsSubject = new BehaviorSubject<Booking[]>([]);
+  public bookings$ = this.bookingsSubject.asObservable();
 
-  // test = {
-  //   project: 'STD',
-  //   tabel_name: 'TRUCKS_TABLE',
-  //   operation: 'READ',
-  //   columns: ['ALL'],
-  //   // filter: [{
-  //   //   AND: [{
-  //   //     PLANT_CODE: '1234'
-  //   //   }]
-  //   // }]
-  // };
+  get bookings(): Booking[] {
+    return this.bookingsSubject.value;
+  }
 
-  // test2 = {
-  //   project: 'STD',
-  //   tabel_name: 'TRUCKS_TABLE',
-  //   operation: 'CREATE',
-  //   data: [
-  //     {
-  //       id_booking: '1',
-  //       user_name: 'nume',
-  //       booking_date: 'mm/dd/yy',
-  //       booking_desk: 'A2',
-  //     },
-  //   ],
-  // };
+  private apiUrl = 'https://your-backend-api.com/api';
 
-  // test3 = {
-  //   project: 'STD',
-  //   tabel_name: 'TRUCKS_TABLE',
-  //   operation: 'DELETE',
-  //   filter: [
-  //     {
-  //       AND: [
-  //         {
-  //           id_booking: '1',
-  //         },
-  //       ],
-  //     },
-  //   ],
-  // };
+  constructor(private http: HttpClient) {
+    this.loadBookings();
+  }
 
-  // response = {
-  //   success: true,
-  //   payload: [
-  //     {
-  //       id: 'srting1',
-  //       truck_name: 'asfs',
-  //       example: 'fsdfds',
-  //     },
-  //   ],
-  // };
+  private loadBookings() {
+    this.execute({ table_name: 'BOOKINGS_TABLE', operation: 'READ' })
+      .pipe(
+        map((response: any) => {
+          if (response.success) {
+            return response.payload.map((b: any) => ({
+              id: b.id,
+              user: b.user_name,
+              deskId: b.booking_desk,
+              date: new Date(b.booking_date),
+            }));
+          }
+          return [];
+        }),
+      )
+      .subscribe((bookings) => {
+        this.bookingsSubject.next(bookings);
+      });
+  }
 
-  // response2 = {
-  //   success: true,
-  //   payload: [
-  //     {
-  //       id_booking: '1',
-  //       user_name: 'nume',
-  //       booking_desk: 'A2',
-  //     },
-  //   ],
-  // };
+  execute(command: any): Observable<any> {
+    return this.http.post(this.apiUrl, command);
+  }
 
   selectDesk(deskId: string | null) {
     this.selectedDesk = deskId;
@@ -85,40 +62,69 @@ export class BookingService {
   selectDate(date: Date | null, valid: boolean = true) {
     this.selectedDate = date;
     this.selectedDateValid = valid;
+    this.selectedDateSubject.next(date);
   }
 
-  addBooking(booking: Booking): boolean {
-    const exists = this.bookings.find(
-      (b) =>
-        b.user === booking.user &&
-        b.date.toDateString() === booking.date.toDateString(),
+  addBooking(booking: Booking): Observable<boolean> {
+    const command = {
+      table_name: 'BOOKINGS_TABLE',
+      operation: 'CREATE',
+      data: {
+        user_name: booking.user,
+        booking_date: booking.date.toLocaleDateString(),
+        booking_desk: booking.deskId,
+      },
+    };
+
+    return this.execute(command).pipe(
+      tap((response: any) => {
+        if (response.success) {
+          const newBooking = {
+            id: response.payload.id,
+            user: booking.user,
+            deskId: booking.deskId,
+            date: booking.date,
+          };
+          this.bookingsSubject.next([...this.bookings, newBooking]);
+
+          if (this.selectedDesk === booking.deskId) {
+            this.selectDesk(null);
+          }
+        }
+      }),
+      map((response: any) => response.success),
     );
-    if (exists) {
-      return false;
-    }
-
-    this.bookings = [...this.bookings, booking];
-
-    if (this.selectedDesk === booking.deskId) {
-      this.selectDesk(null);
-    }
-
-    return true;
   }
 
-  removeBooking(user: string, date: Date) {
+  removeBooking(user: string, date: Date): Observable<boolean> {
     const bookingToRemove = this.bookings.find(
       (b) => b.user === user && b.date.toDateString() === date.toDateString(),
     );
 
-    this.bookings = this.bookings.filter(
-      (b) =>
-        !(b.user === user && b.date.toDateString() === date.toDateString()),
-    );
-
-    if (bookingToRemove && this.selectedDesk === bookingToRemove.deskId) {
-      this.selectDesk(null);
+    if (!bookingToRemove) {
+      return new Observable((subscriber) => subscriber.next(false));
     }
+
+    const command = {
+      table_name: 'BOOKINGS_TABLE',
+      operation: 'DELETE',
+      data: { id: bookingToRemove.id },
+    };
+
+    return this.execute(command).pipe(
+      tap((response: any) => {
+        if (response.success) {
+          this.bookingsSubject.next(
+            this.bookings.filter((b) => b.id !== bookingToRemove.id),
+          );
+
+          if (this.selectedDesk === bookingToRemove.deskId) {
+            this.selectDesk(null);
+          }
+        }
+      }),
+      map((response: any) => response.success),
+    );
   }
 
   getBookingFor(user: string, date: Date): Booking | undefined {

@@ -17,8 +17,12 @@
     </ng-template>
 
     <div class="right">
-      <button (click)="bookNow()" [class.withdraw]="!!bookedDesk">
-        {{ buttonLabel }}
+      <button
+        (click)="bookNow()"
+        [class.withdraw]="!!bookedDesk"
+        [disabled]="isLoading"
+      >
+        {{ isLoading ? "Processing..." : buttonLabel }}
       </button>
       <a routerLink="/info"
         ><i class="fas fa-info fa-lg" style="color: #000000"></i

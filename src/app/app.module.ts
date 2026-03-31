@@ -21,6 +21,13 @@ import { TopBarComponent } from './top-bar/top-bar.component';
 import { CalendarComponent } from './calendar/calendar.component';
 import { TableComponent } from './table/table.component';
 
+import {
+  HTTP_INTERCEPTORS,
+  provideHttpClient,
+  withInterceptorsFromDi,
+} from '@angular/common/http';
+import { MockInterceptService } from './mock-intercept.service';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -54,6 +61,8 @@ import { TableComponent } from './table/table.component';
         dayNamesMin: ['S', 'M', 'T', 'W', 'T', 'F', 'S'],
       },
     }),
+    provideHttpClient(withInterceptorsFromDi()),
+    { provide: HTTP_INTERCEPTORS, useClass: MockInterceptService, multi: true },
   ],
   bootstrap: [AppComponent],
 })

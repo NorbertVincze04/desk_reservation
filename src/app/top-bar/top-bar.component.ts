@@ -8,7 +8,8 @@ import { BookingService } from '../shared/booking.service';
 })
 export class TopBarComponent {
   errorMessage: string | null = null;
-  private readonly user = 'Jhon Doe';
+  isLoading = false;
+  private readonly user = 'John Doe';
 
   constructor(public bookingService: BookingService) {}
 
@@ -52,15 +53,41 @@ export class TopBarComponent {
       return;
     }
 
+    this.isLoading = true;
+
     if (this.bookedDesk && this.currentDate) {
-      this.bookingService.removeBooking(this.user, this.currentDate);
-      this.bookingService.selectDesk(null);
-    } else if (this.currentDesk && this.currentDate) {
-      this.bookingService.addBooking({
-        user: this.user,
-        deskId: this.currentDesk,
-        date: this.currentDate,
+      this.bookingService.removeBooking(this.user, this.currentDate).subscribe({
+        next: (success) => {
+          this.isLoading = false;
+          if (!success) {
+            this.showError('Failed to withdraw booking');
+          }
+        },
+        error: () => {
+          this.isLoading = false;
+          this.showError('Failed to withdraw booking');
+        },
       });
+    } else if (this.currentDesk && this.currentDate) {
+      this.bookingService
+        .addBooking({
+          id: '',
+          user: this.user,
+          deskId: this.currentDesk,
+          date: this.currentDate,
+        })
+        .subscribe({
+          next: (success) => {
+            this.isLoading = false;
+            if (!success) {
+              this.showError('Failed to book desk');
+            }
+          },
+          error: () => {
+            this.isLoading = false;
+            this.showError('Failed to book desk');
+          },
+        });
     }
   }
 
