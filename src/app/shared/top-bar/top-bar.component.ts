@@ -44,7 +44,7 @@ export class TopBarComponent {
 
   get isButtonDisabled(): boolean {
     if (this.isLoading) return true;
-    if (this.bookedDesk) return false; // Withdraw is always enabled if not loading
+    if (this.bookedDesk) return false;
     return !this.currentDateValid || !this.currentDesk;
   }
 
