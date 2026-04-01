@@ -33,9 +33,15 @@ button.withdraw {
   width: 120px;
 }
 
-button.withdraw:hover {
-  background-color: #ff0000;
-  color: white;
+button:disabled {
+  background-color: #cccccc;
+  color: #666666;
+  cursor: not-allowed;
+}
+
+button:disabled:hover {
+  background-color: #cccccc;
+  color: #666666;
 }
 
 .error {

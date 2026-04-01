@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { BookingService } from '../booking.service';
+import { BookingService } from '../../core/booking.service';
 
 @Component({
   selector: 'app-map',

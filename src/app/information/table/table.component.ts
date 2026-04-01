@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { BookingService, Booking } from '../shared/booking.service';
+import { BookingService, Booking } from '../../core/booking.service';
 import { Subscription, combineLatest } from 'rxjs';
 
 @Component({

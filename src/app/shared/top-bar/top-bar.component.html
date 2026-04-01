@@ -20,7 +20,7 @@
       <button
         (click)="bookNow()"
         [class.withdraw]="!!bookedDesk"
-        [disabled]="isLoading"
+        [disabled]="isButtonDisabled"
       >
         {{ isLoading ? "Processing..." : buttonLabel }}
       </button>

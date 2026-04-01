@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { BookingService } from '../shared/booking.service';
+import { BookingService } from '../../core/booking.service';
 
 @Component({
   selector: 'app-top-bar',
@@ -42,17 +42,13 @@ export class TopBarComponent {
     return this.bookedDesk ? 'Withdraw booking' : 'Book Now';
   }
 
+  get isButtonDisabled(): boolean {
+    if (this.isLoading) return true;
+    if (this.bookedDesk) return false; // Withdraw is always enabled if not loading
+    return !this.currentDateValid || !this.currentDesk;
+  }
+
   bookNow() {
-    if (!this.currentDate || !this.currentDateValid) {
-      this.showError('A day must be selected first');
-      return;
-    }
-
-    if (!this.bookedDesk && !this.currentDesk) {
-      this.showError('A desk must be selected first');
-      return;
-    }
-
     this.isLoading = true;
 
     if (this.bookedDesk && this.currentDate) {

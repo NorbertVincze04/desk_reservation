@@ -14,27 +14,23 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { routes } from './app-routes';
 import { AppComponent } from './app.component';
 import { BookingComponent } from './booking/booking.component';
-import { HeaderComponent } from './header/header.component';
 import { InformationComponent } from './information/information.component';
 import { NotFoundComponent } from './not-found/not-found.component';
-import { TopBarComponent } from './top-bar/top-bar.component';
-import { CalendarComponent } from './calendar/calendar.component';
-import { TableComponent } from './table/table.component';
+import { CalendarComponent } from './booking/calendar/calendar.component';
+import { TableComponent } from './information/table/table.component';
 
 import {
   HTTP_INTERCEPTORS,
   provideHttpClient,
   withInterceptorsFromDi,
 } from '@angular/common/http';
-import { MockInterceptService } from './mock-intercept.service';
+import { MockInterceptService } from './core/mock-intercept.service';
 
 @NgModule({
   declarations: [
     AppComponent,
     NotFoundComponent,
     BookingComponent,
-    HeaderComponent,
-    TopBarComponent,
     InformationComponent,
     CalendarComponent,
     TableComponent,
