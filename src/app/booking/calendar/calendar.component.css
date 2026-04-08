@@ -20,11 +20,12 @@
 }
 
 ::ng-deep .p-datepicker-day-cell {
-  padding: 12px !important;
+  padding: 25px !important;
+  padding-bottom: 45px !important;
 }
 
 ::ng-deep .p-datepicker-weekday-cell {
-  padding: 12px !important;
+  padding: 25px !important;
 }
 
 ::ng-deep .p-datepicker-weekday {
@@ -35,4 +36,14 @@
   background-color: #f0eded;
   color: #ff0000;
   text-align: center;
+}
+
+@media (max-width: 1400px) {
+  ::ng-deep .p-datepicker-day-cell {
+    padding: 12px !important;
+  }
+
+  ::ng-deep .p-datepicker-weekday-cell {
+    padding: 12px !important;
+  }
 }

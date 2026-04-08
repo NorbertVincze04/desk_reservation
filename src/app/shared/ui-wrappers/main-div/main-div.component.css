@@ -1,5 +1,5 @@
 .main-div {
-  height: 430px;
+  height: 100dvh;
   margin-top: 25px;
   display: grid;
   grid-template-columns: 1fr 2fr;

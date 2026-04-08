@@ -1,5 +1,11 @@
 .calendar {
   display: flex;
   justify-content: center;
-  height: 465px;
+  height: 700px;
+}
+
+@media (max-width: 1400px) {
+  .calendar {
+    height: 440px;
+  }
 }

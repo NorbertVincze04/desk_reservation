@@ -1,6 +1,6 @@
 .map {
   width: 100%;
-  height: 465px;
+  height: 700px;
   background-image: url("../../assets/images/map.jpg");
   background-size: 100% 100%;
   background-position: center;
@@ -18,15 +18,16 @@
   color: black;
   text-align: center;
   padding: 5px;
-  margin-top: 5px;
   position: absolute;
-  top: 0.3%;
-  left: 47%;
+  top: 3%;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .buff-area {
   background-color: rgb(248, 227, 135);
-  left: 72%;
+  left: 77%;
+  transform: translateX(-50%);
 }
 
 .office {
@@ -34,7 +35,7 @@
   gap: 0.8%;
   position: absolute;
   top: 15%;
-  left: 34.5%;
+  left: 35%;
 }
 
 .group {
@@ -45,15 +46,15 @@
 }
 
 .desk {
-  width: 30px;
-  height: 20px;
+  width: 2.2vw;
+  height: 1.5vw;
+  min-width: 28px;
+  min-height: 20px;
   border: 1px solid black;
-  color: black;
   text-align: center;
-  font-size: 10px;
-  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.7vw;
   font-weight: bold;
-  padding-top: 4px;
+  padding-top: 14%;
 }
 
 .desk:hover {
@@ -92,8 +93,11 @@
   background-color: rgb(248, 227, 135);
 }
 
-@media (min-width: 1400px) {
-  .office {
-    left: 38%;
+@media (max-width: 1400px) {
+  .map {
+    height: 440px;
+  }
+  .counter {
+    top: 1.5%;
   }
 }
