@@ -20,6 +20,7 @@ export class BookingService {
   selectedDateValid = true;
   private bookingsSubject = new BehaviorSubject<Booking[]>([]);
   public bookings$ = this.bookingsSubject.asObservable();
+  public user = 'Jhon Doe';
 
   get bookings(): Booking[] {
     return this.bookingsSubject.value;

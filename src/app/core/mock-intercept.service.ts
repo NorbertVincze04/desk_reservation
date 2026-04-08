@@ -20,18 +20,18 @@ interface MockBooking {
 })
 export class MockInterceptService implements HttpInterceptor {
   private mockBookings: MockBooking[] = [
-    {
-      id: '1',
-      user_name: 'John Doe',
-      booking_date: '04/01/2026',
-      booking_desk: 'A1',
-    },
-    {
-      id: '2',
-      user_name: 'Jane Smith',
-      booking_date: '04/02/2026',
-      booking_desk: 'B2',
-    },
+    // {
+    //   id: '1',
+    //   user_name: 'Michael Jordan',
+    //   booking_date: '04/08/2026',
+    //   booking_desk: 'A1',
+    // },
+    // {
+    //   id: '2',
+    //   user_name: 'Jane Smith',
+    //   booking_date: '04/08/2026',
+    //   booking_desk: 'B2',
+    // },
   ];
 
   intercept(
@@ -52,6 +52,10 @@ export class MockInterceptService implements HttpInterceptor {
 
     switch (body.operation) {
       case 'READ':
+        const mockBookings = localStorage.getItem('mockBookings');
+        if (mockBookings) {
+          this.mockBookings = JSON.parse(mockBookings);
+        }
         responsePayload = {
           success: true,
           payload: this.mockBookings,
@@ -66,6 +70,7 @@ export class MockInterceptService implements HttpInterceptor {
           booking_desk: body.data.booking_desk,
         };
         this.mockBookings.push(newBooking);
+        localStorage.setItem('mockBookings', JSON.stringify(this.mockBookings));
         responsePayload = {
           success: true,
           payload: newBooking,

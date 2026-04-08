@@ -9,7 +9,6 @@ import { BookingService } from '../../core/booking.service';
 export class TopBarComponent {
   errorMessage: string | null = null;
   isLoading = false;
-  private readonly user = 'John Doe';
 
   constructor(public bookingService: BookingService) {}
 
@@ -34,7 +33,10 @@ export class TopBarComponent {
     const date = this.currentDate;
     if (!date) return null;
 
-    const booking = this.bookingService.getBookingFor(this.user, date);
+    const booking = this.bookingService.getBookingFor(
+      this.bookingService.user,
+      date,
+    );
     return booking ? booking.deskId : null;
   }
 
@@ -52,23 +54,25 @@ export class TopBarComponent {
     this.isLoading = true;
 
     if (this.bookedDesk && this.currentDate) {
-      this.bookingService.removeBooking(this.user, this.currentDate).subscribe({
-        next: (success) => {
-          this.isLoading = false;
-          if (!success) {
+      this.bookingService
+        .removeBooking(this.bookingService.user, this.currentDate)
+        .subscribe({
+          next: (success) => {
+            this.isLoading = false;
+            if (!success) {
+              this.showError('Failed to withdraw booking');
+            }
+          },
+          error: () => {
+            this.isLoading = false;
             this.showError('Failed to withdraw booking');
-          }
-        },
-        error: () => {
-          this.isLoading = false;
-          this.showError('Failed to withdraw booking');
-        },
-      });
+          },
+        });
     } else if (this.currentDesk && this.currentDate) {
       this.bookingService
         .addBooking({
           id: '',
-          user: this.user,
+          user: this.bookingService.user,
           deskId: this.currentDesk,
           date: this.currentDate,
         })

@@ -9,7 +9,6 @@ import { BookingService } from '../../core/booking.service';
 export class MapComponent {
   officeGroups = ['A', 'B', 'C', 'D'];
   deskNumbers = [1, 2, 3, 4];
-  private user = 'John Doe';
 
   constructor(public bookingService: BookingService) {}
 
@@ -32,7 +31,7 @@ export class MapComponent {
     );
 
     if (bookedDesk) {
-      return bookedDesk.user === this.user ? 'mine' : 'booked';
+      return bookedDesk.user === this.bookingService.user ? 'mine' : 'booked';
     }
 
     if (this.bookingService.selectedDesk === id) {

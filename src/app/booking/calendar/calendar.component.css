@@ -21,7 +21,7 @@
 
 ::ng-deep .p-datepicker-day-cell {
   padding: 25px !important;
-  padding-bottom: 45px !important;
+  padding-bottom: 40px !important;
 }
 
 ::ng-deep .p-datepicker-weekday-cell {
@@ -45,5 +45,10 @@
 
   ::ng-deep .p-datepicker-weekday-cell {
     padding: 12px !important;
+  }
+
+  ::ng-deep .p-datepicker-panel {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
   }
 }
