@@ -3,11 +3,15 @@
     <th>User Name</th>
     <th>Desk Name</th>
   </tr>
-  <tr *ngFor="let b of bookings">
-    <td>{{ b.user }}</td>
-    <td>{{ b.deskId }}</td>
-  </tr>
-  <tr *ngIf="bookings.length === 0">
+
+  <ng-container *ngIf="bookings.length > 0; else empty">
+    <tr *ngFor="let b of bookings">
+      <td>{{ b.user }}</td>
+      <td>{{ b.deskId }}</td>
+    </tr>
+  </ng-container>
+
+  <ng-template #empty>
     <td colspan="2" class="no-bookings">No registrations yet</td>
-  </tr>
+  </ng-template>
 </table>
