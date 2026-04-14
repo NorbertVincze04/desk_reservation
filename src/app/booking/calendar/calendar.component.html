@@ -9,8 +9,8 @@
     (ngModelChange)="onDateChange($event)"
   />
 
-  <div *ngIf="warningMessage" class="message-box warning">
-    <i class="pi pi-exclamation-triangle"></i>
-    <span>{{ warningMessage }}</span>
-  </div>
+  <app-error-notification
+    [config]="validationError"
+    [visible]="!!warningMessage"
+  ></app-error-notification>
 </form>

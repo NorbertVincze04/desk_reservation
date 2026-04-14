@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { BookingService } from '../../core/booking.service';
+import { ErrorConfig } from '../../shared/components/error-notification/error-notification.component';
 
 export interface ValidationStatus {
   valid: boolean;
@@ -26,6 +27,14 @@ export class CalendarComponent {
 
   get warningMessage(): string | null {
     return this.validationSubject.value.message;
+  }
+
+  get validationError(): ErrorConfig {
+    return {
+      message: this.warningMessage || '',
+      type: 'warning',
+      dismissible: false,
+    };
   }
 
   constructor(private bookingService: BookingService) {}

@@ -10,51 +10,22 @@
 
 h5 {
   font-size: 15px;
+  margin: 0;
 }
 
-button {
-  background-color: #007bc0;
-  color: white;
-  border: 0;
-  height: 30px;
-  width: 80px;
-  margin-right: 25px;
-}
-
-button:hover {
-  cursor: pointer;
-  background-color: #0366a0;
-}
-
-button.withdraw {
-  background-color: rgb(255, 255, 255);
-  border: 2px solid #ff0000;
-  color: #ff0000;
-  width: 120px;
-}
-
-button.withdraw:hover {
-  background-color: #ff0000;
-  color: white;
-}
-
-button:disabled {
-  background-color: gray;
-  color: black;
-  cursor: not-allowed;
-  border: none;
-}
-
-.error {
-  position: absolute;
-  right: 175px;
-  text-align: center;
-  background-color: #f0eded;
-  color: #ff0000;
-  width: 200px;
+.right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 a {
   text-decoration: none;
   color: inherit;
+}
+
+app-error-notification {
+  position: absolute;
+  right: 175px;
+  width: 200px;
 }

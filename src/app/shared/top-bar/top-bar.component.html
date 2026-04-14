@@ -17,17 +17,20 @@
     </ng-template>
 
     <div class="right">
-      <button
-        (click)="bookNow()"
-        [class.withdraw]="!!bookedDesk"
-        [disabled]="isButtonDisabled"
-      >
-        {{ isLoading ? "Processing..." : buttonLabel }}
-      </button>
+      <app-action-button
+        [config]="getButtonConfig()"
+        [isLoading]="isLoading"
+        (action)="bookNow()"
+      ></app-action-button>
       <a routerLink="/info"
         ><i class="fas fa-info fa-lg" style="color: #000000"></i
       ></a>
     </div>
-    <div class="error" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+    <app-error-notification
+      [config]="errorConfig"
+      [visible]="!!errorMessage"
+      [ngStyle]="{ position: 'absolute', right: '175px' }"
+    ></app-error-notification>
   </div>
 </app-shadow-box>

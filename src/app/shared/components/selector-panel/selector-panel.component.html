@@ -1,0 +1,16 @@
+<app-shadow-box [class.with-border]="showBorder" [ngClass]="customClass">
+  <div class="selector-panel">
+    <div class="panel-header" *ngIf="config.title">
+      <h5>{{ config.title }}</h5>
+      <p *ngIf="config.description">{{ config.description }}</p>
+    </div>
+
+    <div class="panel-content">
+      <ng-container *ngTemplateOutlet="content"></ng-container>
+    </div>
+
+    <div class="panel-footer" *ngIf="footer">
+      <ng-container *ngTemplateOutlet="footer"></ng-container>
+    </div>
+  </div>
+</app-shadow-box>

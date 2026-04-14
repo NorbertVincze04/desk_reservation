@@ -1,0 +1,25 @@
+<div
+  class="notification"
+  *ngIf="visible"
+  [ngClass]="'alert-' + (config?.type || 'error')"
+>
+  <ng-container
+    *ngIf="custom; then customTemplate; else defaultTemplate"
+  ></ng-container>
+
+  <ng-template #customTemplate>
+    <ng-container *ngTemplateOutlet="custom"></ng-container>
+  </ng-template>
+
+  <ng-template #defaultTemplate>
+    <span>{{ config?.message }}</span>
+    <button
+      *ngIf="config?.dismissible"
+      class="close-btn"
+      (click)="dismiss()"
+      type="button"
+    >
+      ×
+    </button>
+  </ng-template>
+</div>

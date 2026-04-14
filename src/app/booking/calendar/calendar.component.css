@@ -32,6 +32,31 @@
   font-weight: bold !important;
 }
 
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+app-error-notification {
+  width: 100%;
+  margin-top: auto;
+  display: block;
+  flex-shrink: 0;
+}
+
+p-datepicker {
+  flex-shrink: 0;
+}
+
 .message-box.warning {
   background-color: #f0eded;
   color: #ff0000;

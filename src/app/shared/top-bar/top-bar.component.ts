@@ -1,6 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { BookingService } from '../../core/booking.service';
 import { Subscription } from 'rxjs';
+import { ActionConfig } from '../components/action-button/action-button.component';
+import { ErrorConfig } from '../components/error-notification/error-notification.component';
 
 @Component({
   selector: 'app-top-bar',
@@ -15,6 +17,27 @@ export class TopBarComponent implements OnInit, OnDestroy {
   bookedDesk: string | null = null;
   currentUser: string = '';
   dateValid: boolean = true;
+
+  bookingButtonConfig: ActionConfig = {
+    label: 'Book Now',
+    loadingLabel: 'Processing...',
+    variant: 'primary',
+    disabled: false,
+  };
+
+  withdrawButtonConfig: ActionConfig = {
+    label: 'Withdraw booking',
+    loadingLabel: 'Processing...',
+    variant: 'danger',
+    disabled: false,
+  };
+
+  errorConfig: ErrorConfig = {
+    message: '',
+    type: 'error',
+    dismissible: true,
+    duration: 3000,
+  };
 
   private subscription = new Subscription();
 
@@ -90,6 +113,24 @@ export class TopBarComponent implements OnInit, OnDestroy {
     return !this.currentDate || !this.currentDesk;
   }
 
+  getButtonConfig(): ActionConfig {
+    const baseConfig = this.bookedDesk
+      ? this.withdrawButtonConfig
+      : this.bookingButtonConfig;
+    return {
+      ...baseConfig,
+      disabled: this.isButtonDisabled,
+    };
+  }
+
+  private showError(message: string) {
+    this.errorMessage = message;
+    this.errorConfig.message = message;
+    setTimeout(() => {
+      this.errorMessage = null;
+    }, 3000);
+  }
+
   bookNow() {
     this.isLoading = true;
 
@@ -129,10 +170,5 @@ export class TopBarComponent implements OnInit, OnDestroy {
           },
         });
     }
-  }
-
-  private showError(message: string) {
-    this.errorMessage = message;
-    setTimeout(() => (this.errorMessage = null), 3000);
   }
 }

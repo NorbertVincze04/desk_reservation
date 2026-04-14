@@ -1,0 +1,22 @@
+<button
+  (click)="onAction()"
+  [disabled]="config.disabled || isLoading"
+  [ngClass]="'btn-' + (config.variant || 'primary')"
+>
+  <ng-container
+    *ngIf="icon; then iconTemplate; else labelTemplate"
+  ></ng-container>
+
+  <ng-template #iconTemplate>
+    <ng-container *ngTemplateOutlet="icon"></ng-container>
+    <span>{{ displayLabel }}</span>
+  </ng-template>
+
+  <ng-template #labelTemplate>
+    {{ displayLabel }}
+  </ng-template>
+
+  <ng-container *ngIf="content">
+    <ng-container *ngTemplateOutlet="content"></ng-container>
+  </ng-container>
+</button>
