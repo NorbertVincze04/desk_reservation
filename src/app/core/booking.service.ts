@@ -1,6 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, tap, map } from 'rxjs';
+import {
+  BehaviorSubject,
+  Observable,
+  Subject,
+  tap,
+  map,
+  catchError,
+} from 'rxjs';
+import { of } from 'rxjs';
 
 export interface Booking {
   id: string;
@@ -9,21 +17,55 @@ export interface Booking {
   date: Date;
 }
 
+export interface Notification {
+  type: 'success' | 'error' | 'warning';
+  message: string;
+}
+
+export interface ValidationStatus {
+  valid: boolean;
+  message: string | null;
+}
+
 @Injectable({
   providedIn: 'root',
 })
 export class BookingService {
-  selectedDesk: string | null = null;
+  private selectedDeskSubject = new BehaviorSubject<string | null>(null);
+  public selectedDesk$ = this.selectedDeskSubject.asObservable();
+
   private selectedDateSubject = new BehaviorSubject<Date | null>(null);
   public selectedDate$ = this.selectedDateSubject.asObservable();
-  selectedDate: Date | null = null;
-  selectedDateValid = true;
+
   private bookingsSubject = new BehaviorSubject<Booking[]>([]);
   public bookings$ = this.bookingsSubject.asObservable();
-  public user = 'Jhon Doe';
+
+  private userSubject = new BehaviorSubject<string>('Jhon Doe');
+  public user$ = this.userSubject.asObservable();
+
+  private notificationSubject = new Subject<Notification>();
+  public notifications$ = this.notificationSubject.asObservable();
+
+  private validationSubject = new BehaviorSubject<ValidationStatus>({
+    valid: true,
+    message: null,
+  });
+  public validation$ = this.validationSubject.asObservable();
 
   get bookings(): Booking[] {
     return this.bookingsSubject.value;
+  }
+
+  get selectedDesk(): string | null {
+    return this.selectedDeskSubject.value;
+  }
+
+  get user(): string {
+    return this.userSubject.value;
+  }
+
+  get selectedDate(): Date | null {
+    return this.selectedDateSubject.value;
   }
 
   private apiUrl = 'https://your-backend-api.com/api';
@@ -46,6 +88,13 @@ export class BookingService {
           }
           return [];
         }),
+        catchError((error) => {
+          this.notificationSubject.next({
+            type: 'error',
+            message: 'Failed to load bookings',
+          });
+          return of([]);
+        }),
       )
       .subscribe((bookings) => {
         this.bookingsSubject.next(bookings);
@@ -57,13 +106,19 @@ export class BookingService {
   }
 
   selectDesk(deskId: string | null) {
-    this.selectedDesk = deskId;
+    this.selectedDeskSubject.next(deskId);
   }
 
-  selectDate(date: Date | null, valid: boolean = true) {
-    this.selectedDate = date;
-    this.selectedDateValid = valid;
+  selectDate(date: Date | null) {
     this.selectedDateSubject.next(date);
+  }
+
+  setUser(name: string) {
+    this.userSubject.next(name);
+  }
+
+  setValidation(validation: ValidationStatus) {
+    this.validationSubject.next(validation);
   }
 
   addBooking(booking: Booking): Observable<boolean> {
@@ -88,10 +143,27 @@ export class BookingService {
           };
           this.bookingsSubject.next([...this.bookings, newBooking]);
 
-          if (this.selectedDesk === booking.deskId) {
+          if (this.selectedDeskSubject.value === booking.deskId) {
             this.selectDesk(null);
           }
+
+          this.notificationSubject.next({
+            type: 'success',
+            message: `Desk ${booking.deskId} booked successfully`,
+          });
+        } else {
+          this.notificationSubject.next({
+            type: 'error',
+            message: 'Failed to book desk',
+          });
         }
+      }),
+      catchError((error) => {
+        this.notificationSubject.next({
+          type: 'error',
+          message: 'Failed to book desk',
+        });
+        return of(false);
       }),
       map((response: any) => response.success),
     );
@@ -103,7 +175,11 @@ export class BookingService {
     );
 
     if (!bookingToRemove) {
-      return new Observable((subscriber) => subscriber.next(false));
+      this.notificationSubject.next({
+        type: 'warning',
+        message: 'No booking found to remove',
+      });
+      return of(false);
     }
 
     const command = {
@@ -119,10 +195,27 @@ export class BookingService {
             this.bookings.filter((b) => b.id !== bookingToRemove.id),
           );
 
-          if (this.selectedDesk === bookingToRemove.deskId) {
+          if (this.selectedDeskSubject.value === bookingToRemove.deskId) {
             this.selectDesk(null);
           }
+
+          this.notificationSubject.next({
+            type: 'success',
+            message: `Booking for desk ${bookingToRemove.deskId} withdrawn`,
+          });
+        } else {
+          this.notificationSubject.next({
+            type: 'error',
+            message: 'Failed to withdraw booking',
+          });
         }
+      }),
+      catchError((error) => {
+        this.notificationSubject.next({
+          type: 'error',
+          message: 'Failed to withdraw booking',
+        });
+        return of(false);
       }),
       map((response: any) => response.success),
     );

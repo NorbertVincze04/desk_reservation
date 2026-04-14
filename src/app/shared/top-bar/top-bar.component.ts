@@ -1,43 +1,82 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { BookingService } from '../../core/booking.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-top-bar',
   templateUrl: './top-bar.component.html',
   styleUrl: './top-bar.component.css',
 })
-export class TopBarComponent {
+export class TopBarComponent implements OnInit, OnDestroy {
   errorMessage: string | null = null;
   isLoading = false;
+  currentDesk: string | null = null;
+  currentDate: Date | null = null;
+  bookedDesk: string | null = null;
+  currentUser: string = '';
+  dateValid: boolean = true;
+
+  private subscription = new Subscription();
 
   constructor(public bookingService: BookingService) {}
 
-  private sameDay(a: Date | undefined, b: Date | null): boolean {
-    if (!a || !b) return false;
-    return a.toDateString() === b.toDateString();
+  ngOnInit() {
+    this.subscription.add(
+      this.bookingService.selectedDesk$.subscribe((desk) => {
+        this.currentDesk = desk;
+      }),
+    );
+
+    this.subscription.add(
+      this.bookingService.selectedDate$.subscribe((date) => {
+        this.currentDate = date;
+        this.updateBookedDesk();
+      }),
+    );
+
+    this.subscription.add(
+      this.bookingService.bookings$.subscribe(() => {
+        this.updateBookedDesk();
+      }),
+    );
+
+    this.subscription.add(
+      this.bookingService.user$.subscribe((user) => {
+        this.currentUser = user;
+        this.updateBookedDesk();
+      }),
+    );
+
+    this.subscription.add(
+      this.bookingService.notifications$.subscribe((notification) => {
+        if (notification.type === 'error') {
+          this.showError(notification.message);
+        }
+      }),
+    );
+
+    this.subscription.add(
+      this.bookingService.validation$.subscribe((validation) => {
+        this.dateValid = validation.valid;
+      }),
+    );
   }
 
-  get currentDesk(): string | null {
-    return this.bookingService.selectedDesk;
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
-  get currentDate(): Date | null {
-    return this.bookingService.selectedDate;
-  }
-
-  get currentDateValid(): boolean {
-    return this.bookingService.selectedDateValid;
-  }
-
-  get bookedDesk(): string | null {
-    const date = this.currentDate;
-    if (!date) return null;
+  private updateBookedDesk() {
+    if (!this.currentDate) {
+      this.bookedDesk = null;
+      return;
+    }
 
     const booking = this.bookingService.getBookingFor(
-      this.bookingService.user,
-      date,
+      this.currentUser,
+      this.currentDate,
     );
-    return booking ? booking.deskId : null;
+    this.bookedDesk = booking ? booking.deskId : null;
   }
 
   get buttonLabel(): string {
@@ -46,8 +85,9 @@ export class TopBarComponent {
 
   get isButtonDisabled(): boolean {
     if (this.isLoading) return true;
+    if (!this.dateValid) return true;
     if (this.bookedDesk) return false;
-    return !this.currentDateValid || !this.currentDesk;
+    return !this.currentDate || !this.currentDesk;
   }
 
   bookNow() {
@@ -55,7 +95,7 @@ export class TopBarComponent {
 
     if (this.bookedDesk && this.currentDate) {
       this.bookingService
-        .removeBooking(this.bookingService.user, this.currentDate)
+        .removeBooking(this.currentUser, this.currentDate)
         .subscribe({
           next: (success) => {
             this.isLoading = false;
@@ -72,7 +112,7 @@ export class TopBarComponent {
       this.bookingService
         .addBooking({
           id: '',
-          user: this.bookingService.user,
+          user: this.currentUser,
           deskId: this.currentDesk,
           date: this.currentDate,
         })

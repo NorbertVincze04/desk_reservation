@@ -1,5 +1,11 @@
 import { Component } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 import { BookingService } from '../../core/booking.service';
+
+export interface ValidationStatus {
+  valid: boolean;
+  message: string | null;
+}
 
 @Component({
   selector: 'app-calendar',
@@ -11,7 +17,16 @@ export class CalendarComponent {
   minDate: Date = new Date();
   limitDate: Date = this.calculateLimitDays(new Date(), 3);
   disabledDays: number[] = [0, 6];
-  warningMessage: string | null = null;
+
+  private validationSubject = new BehaviorSubject<ValidationStatus>({
+    valid: true,
+    message: null,
+  });
+  public validation$ = this.validationSubject.asObservable();
+
+  get warningMessage(): string | null {
+    return this.validationSubject.value.message;
+  }
 
   constructor(private bookingService: BookingService) {}
 
@@ -19,8 +34,9 @@ export class CalendarComponent {
     this.selectedDate = selectedDate;
     this.validateBookingDate(selectedDate);
 
-    const valid = selectedDate != null && this.warningMessage === null;
-    this.bookingService.selectDate(selectedDate, valid);
+    const validation = this.validationSubject.value;
+    this.bookingService.selectDate(selectedDate);
+    this.bookingService.setValidation(validation);
   }
 
   calculateLimitDays(startDate: Date, daysToAdd: number): Date {
@@ -41,15 +57,23 @@ export class CalendarComponent {
 
   validateBookingDate(date: Date | null) {
     if (!date) {
-      this.warningMessage = null;
+      const validation = { valid: true, message: null };
+      this.validationSubject.next(validation);
+      this.bookingService.setValidation(validation);
       return;
     }
 
     if (date > this.limitDate) {
-      this.warningMessage =
-        'You can only make a reservation for the next 3 days.';
+      const validation = {
+        valid: false,
+        message: 'You can only make a reservation for the next 3 days.',
+      };
+      this.validationSubject.next(validation);
+      this.bookingService.setValidation(validation);
     } else {
-      this.warningMessage = null;
+      const validation = { valid: true, message: null };
+      this.validationSubject.next(validation);
+      this.bookingService.setValidation(validation);
     }
   }
 }

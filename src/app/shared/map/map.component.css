@@ -93,6 +93,10 @@
   background-color: rgb(248, 227, 135);
 }
 
+.buff:hover {
+  cursor: default;
+}
+
 @media (max-width: 1400px) {
   .map {
     height: 440px;
