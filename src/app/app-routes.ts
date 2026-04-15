@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
-import { NotFoundComponent } from './not-found/not-found.component';
-import { BookingComponent } from './booking/booking.component';
-import { InformationComponent } from './information/information.component';
+import { BookingComponent } from './core/pages/booking/booking.component';
+import { InformationComponent } from './core/pages/information/information.component';
+import { NotFoundComponent } from './core/pages/not-found/not-found.component';
 
 export const routes: Routes = [
   {
