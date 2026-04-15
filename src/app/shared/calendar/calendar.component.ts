@@ -39,12 +39,13 @@ export class CalendarComponent {
 
   constructor(private bookingService: BookingService) {}
 
-  onDateChange(selectedDate: Date | null) {
-    this.selectedDate = selectedDate;
-    this.validateBookingDate(selectedDate);
+  onDateChange(selectedDate: any) {
+    const dateValue = selectedDate as Date | null;
+    this.selectedDate = dateValue;
+    this.validateBookingDate(dateValue);
 
     const validation = this.validationSubject.value;
-    this.bookingService.selectDate(selectedDate);
+    this.bookingService.selectDate(dateValue);
     this.bookingService.setValidation(validation);
   }
 

@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { DatePickerModule } from 'primeng/datepicker';
 import { ShadowBoxComponent } from './ui-wrappers/shadow-box/shadow-box.component';
 import { MainDivComponent } from './ui-wrappers/main-div/main-div.component';
 import { MapComponent } from './map/map.component';
@@ -24,7 +26,12 @@ import { TableComponent } from './table/table.component';
     CalendarComponent,
     TableComponent,
   ],
-  imports: [CommonModule, RouterModule.forRoot(routes)],
+  imports: [
+    CommonModule,
+    RouterModule.forRoot(routes),
+    FormsModule,
+    DatePickerModule,
+  ],
   exports: [
     ShadowBoxComponent,
     MainDivComponent,
