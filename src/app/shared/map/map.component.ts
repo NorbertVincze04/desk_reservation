@@ -15,6 +15,7 @@ export class MapComponent implements OnInit, OnDestroy {
   selectedDesk: string | null = null;
   bookings: any[] = [];
   currentUser: string = '';
+  isDateValidated: boolean = true;
 
   private subscription = new Subscription();
 
@@ -44,6 +45,12 @@ export class MapComponent implements OnInit, OnDestroy {
         this.currentUser = user;
       }),
     );
+
+    this.subscription.add(
+      this.bookingService.validation$.subscribe((validation) => {
+        this.isDateValidated = validation.valid;
+      }),
+    );
   }
 
   ngOnDestroy() {
@@ -59,6 +66,10 @@ export class MapComponent implements OnInit, OnDestroy {
     const id = groupId + deskNum;
 
     if (!this.selectedDate) {
+      return 'booked';
+    }
+
+    if (!this.isDateValidated) {
       return 'booked';
     }
 
@@ -79,7 +90,7 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   toggleDesk(groupId: string, deskNum: number) {
-    if (!this.selectedDate) {
+    if (!this.selectedDate || !this.isDateValidated) {
       return;
     }
 
