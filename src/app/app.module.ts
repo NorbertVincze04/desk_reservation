@@ -23,8 +23,6 @@ import { MockInterceptService } from './core/mock-intercept.service';
 import { NotFoundComponent } from './core/pages/not-found/not-found.component';
 import { BookingComponent } from './core/pages/booking/booking.component';
 import { InformationComponent } from './core/pages/information/information.component';
-import { CalendarComponent } from './shared/calendar/calendar.component';
-import { TableComponent } from './shared/table/table.component';
 
 @NgModule({
   declarations: [
@@ -32,8 +30,6 @@ import { TableComponent } from './shared/table/table.component';
     NotFoundComponent,
     BookingComponent,
     InformationComponent,
-    CalendarComponent,
-    TableComponent,
   ],
   imports: [
     BrowserModule,
