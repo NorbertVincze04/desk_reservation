@@ -4,6 +4,8 @@ import {
   BehaviorSubject,
   Observable,
   Subject,
+  ReplaySubject,
+  AsyncSubject,
   tap,
   map,
   catchError,
@@ -45,6 +47,17 @@ export class BookingService {
 
   private notificationSubject = new Subject<Notification>();
   public notifications$ = this.notificationSubject.asObservable();
+
+  // ReplaySubject - stochează ultimele 5 notificări
+  private notificationHistorySubject = new ReplaySubject<Notification>(5);
+  public notificationHistory$ = this.notificationHistorySubject.asObservable();
+
+  // AsyncSubject - emite doar rezultatul final al unei operații
+  private bookingOperationSubject = new AsyncSubject<{
+    success: boolean;
+    message: string;
+  }>();
+  public bookingOperation$ = this.bookingOperationSubject.asObservable();
 
   private validationSubject = new BehaviorSubject<ValidationStatus>({
     valid: true,
@@ -89,10 +102,12 @@ export class BookingService {
           return [];
         }),
         catchError((error) => {
-          this.notificationSubject.next({
+          const notification: Notification = {
             type: 'error',
             message: 'Failed to load bookings',
-          });
+          };
+          this.notificationSubject.next(notification);
+          this.notificationHistorySubject.next(notification);
           return of([]);
         }),
       )
@@ -218,6 +233,83 @@ export class BookingService {
         return of(false);
       }),
       map((response: any) => response.success),
+    );
+  }
+
+  // Exemplu cu AsyncSubject - emite doar rezultatul final
+  createBookingWithAsyncFeedback(booking: Booking): Observable<{
+    success: boolean;
+    message: string;
+  }> {
+    const command = {
+      table_name: 'BOOKINGS_TABLE',
+      operation: 'CREATE',
+      data: {
+        user_name: booking.user,
+        booking_date: booking.date.toLocaleDateString(),
+        booking_desk: booking.deskId,
+      },
+    };
+
+    return this.execute(command).pipe(
+      tap((response: any) => {
+        if (response.success) {
+          const newBooking = {
+            id: response.payload.id,
+            user: booking.user,
+            deskId: booking.deskId,
+            date: booking.date,
+          };
+          this.bookingsSubject.next([...this.bookings, newBooking]);
+          const notification: Notification = {
+            type: 'success',
+            message: `Desk ${booking.deskId} booked successfully`,
+          };
+          this.notificationSubject.next(notification);
+          this.notificationHistorySubject.next(notification);
+
+          // Emite doar rezultatul final cel success în AsyncSubject
+          this.bookingOperationSubject.next({
+            success: true,
+            message: `Desk ${booking.deskId} booked successfully`,
+          });
+        } else {
+          const notification: Notification = {
+            type: 'error',
+            message: 'Failed to book desk',
+          };
+          this.notificationSubject.next(notification);
+          this.notificationHistorySubject.next(notification);
+
+          // Emite doar rezultatul final cel error în AsyncSubject
+          this.bookingOperationSubject.next({
+            success: false,
+            message: 'Failed to book desk',
+          });
+        }
+      }),
+      catchError((error) => {
+        const notification: Notification = {
+          type: 'error',
+          message: 'Booking operation failed',
+        };
+        this.notificationSubject.next(notification);
+        this.notificationHistorySubject.next(notification);
+
+        this.bookingOperationSubject.next({
+          success: false,
+          message: 'Booking operation failed',
+        });
+        return of(null);
+      }),
+      // La final, apelăm complete() pe AsyncSubject ca să emită
+      tap(() => {
+        this.bookingOperationSubject.complete();
+      }),
+      map((response: any) => ({
+        success: response?.success || false,
+        message: response?.message || 'Operation status unknown',
+      })),
     );
   }
 
