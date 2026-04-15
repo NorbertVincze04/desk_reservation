@@ -13,11 +13,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { routes } from './app-routes';
 import { AppComponent } from './app.component';
-import { BookingComponent } from './booking/booking.component';
-import { InformationComponent } from './information/information.component';
-import { NotFoundComponent } from './not-found/not-found.component';
-import { CalendarComponent } from './booking/calendar/calendar.component';
-import { TableComponent } from './information/table/table.component';
 
 import {
   HTTP_INTERCEPTORS,
@@ -25,6 +20,11 @@ import {
   withInterceptorsFromDi,
 } from '@angular/common/http';
 import { MockInterceptService } from './core/mock-intercept.service';
+import { NotFoundComponent } from './core/pages/not-found/not-found.component';
+import { BookingComponent } from './core/pages/booking/booking.component';
+import { InformationComponent } from './core/pages/information/information.component';
+import { CalendarComponent } from './shared/calendar/calendar.component';
+import { TableComponent } from './shared/table/table.component';
 
 @NgModule({
   declarations: [
