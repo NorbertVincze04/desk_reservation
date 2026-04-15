@@ -21,7 +21,7 @@ export class CalendarComponent {
 
   private validationSubject = new BehaviorSubject<ValidationStatus>({
     valid: true,
-    message: null,
+    message: 'Please select a date',
   });
   public validation$ = this.validationSubject.asObservable();
 
@@ -67,9 +67,9 @@ export class CalendarComponent {
 
   validateBookingDate(date: Date | null) {
     if (!date) {
-      const validation = { valid: true, message: null };
-      this.validationSubject.next(validation);
-      this.bookingService.setValidation(validation);
+      // const validation = { valid: false, message: 'Please select a date' };
+      // this.validationSubject.next(validation);
+      // this.bookingService.setValidation(validation);
       return;
     }
 

@@ -15,11 +15,11 @@ export class MapComponent implements OnInit, OnDestroy {
   selectedDesk: string | null = null;
   bookings: any[] = [];
   currentUser: string = '';
-  isDateValidated: boolean = true;
+  isDateValidated: boolean = false;
 
   private subscription = new Subscription();
 
-  constructor(public bookingService: BookingService) {}
+  constructor(private bookingService: BookingService) {}
 
   ngOnInit() {
     this.subscription.add(

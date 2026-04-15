@@ -34,36 +34,34 @@ export interface ValidationStatus {
 })
 export class BookingService {
   private selectedDeskSubject = new BehaviorSubject<string | null>(null);
-  public selectedDesk$ = this.selectedDeskSubject.asObservable();
+  selectedDesk$ = this.selectedDeskSubject.asObservable();
 
   private selectedDateSubject = new BehaviorSubject<Date | null>(null);
-  public selectedDate$ = this.selectedDateSubject.asObservable();
+  selectedDate$ = this.selectedDateSubject.asObservable();
 
   private bookingsSubject = new BehaviorSubject<Booking[]>([]);
-  public bookings$ = this.bookingsSubject.asObservable();
+  bookings$ = this.bookingsSubject.asObservable();
 
   private userSubject = new BehaviorSubject<string>('Jhon Doe');
-  public user$ = this.userSubject.asObservable();
+  user$ = this.userSubject.asObservable();
 
   private notificationSubject = new Subject<Notification>();
-  public notifications$ = this.notificationSubject.asObservable();
+  notifications$ = this.notificationSubject.asObservable();
 
-  // ReplaySubject - stochează ultimele 5 notificări
   private notificationHistorySubject = new ReplaySubject<Notification>(5);
-  public notificationHistory$ = this.notificationHistorySubject.asObservable();
+  notificationHistory$ = this.notificationHistorySubject.asObservable();
 
-  // AsyncSubject - emite doar rezultatul final al unei operații
   private bookingOperationSubject = new AsyncSubject<{
     success: boolean;
     message: string;
   }>();
-  public bookingOperation$ = this.bookingOperationSubject.asObservable();
+  bookingOperation$ = this.bookingOperationSubject.asObservable();
 
   private validationSubject = new BehaviorSubject<ValidationStatus>({
     valid: true,
     message: null,
   });
-  public validation$ = this.validationSubject.asObservable();
+  validation$ = this.validationSubject.asObservable();
 
   get bookings(): Booking[] {
     return this.bookingsSubject.value;
@@ -236,7 +234,6 @@ export class BookingService {
     );
   }
 
-  // Exemplu cu AsyncSubject - emite doar rezultatul final
   createBookingWithAsyncFeedback(booking: Booking): Observable<{
     success: boolean;
     message: string;
@@ -268,7 +265,6 @@ export class BookingService {
           this.notificationSubject.next(notification);
           this.notificationHistorySubject.next(notification);
 
-          // Emite doar rezultatul final cel success în AsyncSubject
           this.bookingOperationSubject.next({
             success: true,
             message: `Desk ${booking.deskId} booked successfully`,
@@ -281,7 +277,6 @@ export class BookingService {
           this.notificationSubject.next(notification);
           this.notificationHistorySubject.next(notification);
 
-          // Emite doar rezultatul final cel error în AsyncSubject
           this.bookingOperationSubject.next({
             success: false,
             message: 'Failed to book desk',
@@ -302,7 +297,6 @@ export class BookingService {
         });
         return of(null);
       }),
-      // La final, apelăm complete() pe AsyncSubject ca să emită
       tap(() => {
         this.bookingOperationSubject.complete();
       }),
