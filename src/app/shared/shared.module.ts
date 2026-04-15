@@ -5,9 +5,7 @@ import { MainDivComponent } from './ui-wrappers/main-div/main-div.component';
 import { MapComponent } from './map/map.component';
 import { HeaderComponent } from './header/header.component';
 import { TopBarComponent } from './top-bar/top-bar.component';
-import { SelectorPanelComponent } from './components/selector-panel/selector-panel.component';
 import { ActionButtonComponent } from './components/action-button/action-button.component';
-import { InfoDisplayComponent } from './components/info-display/info-display.component';
 import { ErrorNotificationComponent } from './components/error-notification/error-notification.component';
 import { RouterModule } from '@angular/router';
 import { routes } from '../app-routes';
@@ -19,9 +17,7 @@ import { routes } from '../app-routes';
     MapComponent,
     HeaderComponent,
     TopBarComponent,
-    SelectorPanelComponent,
     ActionButtonComponent,
-    InfoDisplayComponent,
     ErrorNotificationComponent,
   ],
   imports: [CommonModule, RouterModule.forRoot(routes)],
@@ -31,9 +27,7 @@ import { routes } from '../app-routes';
     MapComponent,
     HeaderComponent,
     TopBarComponent,
-    SelectorPanelComponent,
     ActionButtonComponent,
-    InfoDisplayComponent,
     ErrorNotificationComponent,
   ],
 })
