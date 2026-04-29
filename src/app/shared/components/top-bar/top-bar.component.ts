@@ -28,7 +28,7 @@ export class TopBarComponent implements OnInit, OnDestroy {
   withdrawButtonConfig: ActionConfig = {
     label: 'Withdraw booking',
     loadingLabel: 'Processing...',
-    variant: 'danger',
+    variant: 'secondary',
     disabled: false,
   };
 
@@ -104,10 +104,6 @@ export class TopBarComponent implements OnInit, OnDestroy {
     );
     this.bookedDesk = booking ? booking.deskId : null;
   }
-
-  // get buttonLabel(): string {
-  //   return this.bookedDesk ? 'Withdraw booking' : 'Book Now';
-  // }
 
   get isButtonDisabled(): boolean {
     if (this.isLoading) return true;

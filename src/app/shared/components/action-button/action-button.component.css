@@ -35,22 +35,13 @@ button:disabled {
 }
 
 .btn-secondary {
-  background-color: #8621e4;
-  color: white;
-}
-
-.btn-secondary:hover:not(:disabled) {
-  background-color: #545b62;
-}
-
-.btn-danger {
   background-color: white;
   border: 2px solid #ff0000;
   color: #ff0000;
   width: auto;
 }
 
-.btn-danger:hover:not(:disabled) {
+.btn-secondary:hover:not(:disabled) {
   background-color: #ff0000;
   color: white;
   border: 2px solid #ff0000;

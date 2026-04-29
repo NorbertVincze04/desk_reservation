@@ -95,7 +95,7 @@ export class MockInterceptService implements HttpInterceptor {
     }
 
     return of(new HttpResponse({ status: 200, body: responsePayload })).pipe(
-      delay(500),
+      delay(1000),
     );
   }
 }

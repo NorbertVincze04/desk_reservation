@@ -27,7 +27,7 @@ export class CalendarComponent {
 
   get validationError(): ErrorConfig {
     return {
-      message: this.warningMessage || '',
+      message: this.warningMessage || 'Some Validation Error',
       type: 'warning',
       dismissible: false,
     };
@@ -63,9 +63,6 @@ export class CalendarComponent {
 
   validateBookingDate(date: Date | null) {
     if (!date) {
-      // const validation = { valid: false, message: 'Please select a date' };
-      // this.validationSubject.next(validation);
-      // this.bookingService.setValidation(validation);
       return;
     }
 

@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { BookingService } from '../../../core/services/booking.service';
-import { Subscription } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-map',
@@ -17,44 +17,45 @@ export class MapComponent implements OnInit, OnDestroy {
   currentUser: string = '';
   isDateValidated: boolean = false;
 
-  private subscription = new Subscription();
+  private destroy$ = new Subject<void>();
 
   constructor(private bookingService: BookingService) {}
 
   ngOnInit() {
-    this.subscription.add(
-      this.bookingService.selectedDate$.subscribe((date) => {
+    this.bookingService.selectedDate$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((date) => {
         this.selectedDate = date;
-      }),
-    );
+      });
 
-    this.subscription.add(
-      this.bookingService.selectedDesk$.subscribe((desk) => {
+    this.bookingService.selectedDesk$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((desk) => {
         this.selectedDesk = desk;
-      }),
-    );
+      });
 
-    this.subscription.add(
-      this.bookingService.bookings$.subscribe((bookings) => {
+    this.bookingService.bookings$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((bookings) => {
         this.bookings = bookings;
-      }),
-    );
+      });
 
-    this.subscription.add(
-      this.bookingService.user$.subscribe((user) => {
+    this.bookingService.user$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((user) => {
         this.currentUser = user;
-      }),
-    );
+      });
 
-    this.subscription.add(
-      this.bookingService.validation$.subscribe((validation) => {
+    this.bookingService.validation$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((validation) => {
         this.isDateValidated = validation.valid;
-      }),
-    );
+      });
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   private sameDay(a: Date | undefined, b: Date | null): boolean {

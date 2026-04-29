@@ -11,7 +11,7 @@ export interface ActionConfig {
   icon?: string;
   loadingLabel?: string;
   disabled?: boolean;
-  variant?: 'primary' | 'secondary' | 'danger';
+  variant?: 'primary' | 'secondary';
 }
 
 @Component({
@@ -23,7 +23,6 @@ export class ActionButtonComponent {
   @Input() config: ActionConfig = { label: 'Action' };
   @Input() isLoading: boolean = false;
   @Input() icon: TemplateRef<any> | null = null;
-  @Input() content: TemplateRef<any> | null = null;
   @Output() action = new EventEmitter<void>();
 
   get displayLabel(): string {

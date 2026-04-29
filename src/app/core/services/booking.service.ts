@@ -83,7 +83,7 @@ export class BookingService {
           }
           return [];
         }),
-        catchError((error) => {
+        catchError(() => {
           const notification: Notification = {
             type: 'error',
             message: 'Failed to load bookings',
@@ -155,7 +155,7 @@ export class BookingService {
           });
         }
       }),
-      catchError((error) => {
+      catchError(() => {
         this.notificationSubject.next({
           type: 'error',
           message: 'Failed to book desk',
@@ -207,7 +207,7 @@ export class BookingService {
           });
         }
       }),
-      catchError((error) => {
+      catchError(() => {
         this.notificationSubject.next({
           type: 'error',
           message: 'Failed to withdraw booking',

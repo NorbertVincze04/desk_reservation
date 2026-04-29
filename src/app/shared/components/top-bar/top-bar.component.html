@@ -1,10 +1,10 @@
 <app-shadow-box>
   <div class="top-bar">
-    <h5 *ngIf="bookedDesk; else sel">
+    <h5 *ngIf="bookedDesk; else booking">
       You already booked {{ bookedDesk }} on
       {{ currentDate | date: "shortDate" }}
     </h5>
-    <ng-template #sel>
+    <ng-template #booking>
       <h5 *ngIf="currentDesk; else none">
         Current booking - {{ currentDesk }}
         <span *ngIf="currentDate"
@@ -22,15 +22,13 @@
         [isLoading]="isLoading"
         (action)="buttonAction()"
       ></app-action-button>
-      <a routerLink="/info"
-        ><i class="fas fa-info fa-lg" style="color: #000000"></i
-      ></a>
+      <a routerLink="/info"><i class="fas fa-info fa-lg"></i> </a>
     </div>
 
     <app-error-notification
       [config]="errorConfig"
       [visible]="!!errorMessage"
-      [ngStyle]="{ position: 'absolute', right: '175px' }"
+      [ngStyle]="{ position: 'abSsolute', right: '175px' }"
     ></app-error-notification>
   </div>
 </app-shadow-box>
