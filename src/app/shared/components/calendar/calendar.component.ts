@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { BookingService } from '../../core/booking.service';
-import { ErrorConfig } from '../../shared/components/error-notification/error-notification.component';
+import { BookingService } from '../../../core/services/booking.service';
+import { ErrorConfig } from '../error-notification/error-notification.component';
 
 export interface ValidationStatus {
   valid: boolean;

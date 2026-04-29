@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { BookingService } from '../../core/booking.service';
+import { BookingService } from '../../../core/services/booking.service';
 import { Subscription } from 'rxjs';
-import { ActionConfig } from '../components/action-button/action-button.component';
-import { ErrorConfig } from '../components/error-notification/error-notification.component';
+import { ActionConfig } from '../action-button/action-button.component';
+import { ErrorConfig } from '../error-notification/error-notification.component';
 
 @Component({
   selector: 'app-top-bar',

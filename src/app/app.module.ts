@@ -19,10 +19,10 @@ import {
   provideHttpClient,
   withInterceptorsFromDi,
 } from '@angular/common/http';
-import { MockInterceptService } from './core/mock-intercept.service';
-import { NotFoundComponent } from './core/pages/not-found/not-found.component';
-import { BookingComponent } from './core/pages/booking/booking.component';
-import { InformationComponent } from './core/pages/information/information.component';
+import { MockInterceptService } from './core/interceptors/mock-intercept.service';
+import { NotFoundComponent } from './features/not-found/not-found.component';
+import { BookingComponent } from './features/booking/booking.component';
+import { InformationComponent } from './features/information/information.component';
 
 @NgModule({
   declarations: [

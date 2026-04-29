@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { BookingService } from '../../core/booking.service';
+import { BookingService } from '../../../core/services/booking.service';
 import { Subscription } from 'rxjs';
 
 @Component({
