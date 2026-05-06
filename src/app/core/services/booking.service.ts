@@ -12,6 +12,7 @@ import { of } from 'rxjs';
 import { Booking } from '../models/booking';
 import { Notification } from '../models/notification';
 import { ValidationStatus } from '../models/validation-status';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root',
@@ -26,7 +27,7 @@ export class BookingService {
   private bookingsSubject = new BehaviorSubject<Booking[]>([]);
   bookings$ = this.bookingsSubject.asObservable();
 
-  private userSubject = new BehaviorSubject<string>('Jhon Doe');
+  private userSubject = new BehaviorSubject<string>('Guest');
   user$ = this.userSubject.asObservable();
 
   private notificationSubject = new Subject<Notification>();
@@ -56,7 +57,15 @@ export class BookingService {
 
   private apiUrl = 'https://backend-api.com/api';
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService,
+  ) {
+    // Update user name when auth state changes
+    this.authService.currentUser$.subscribe((user) => {
+      this.userSubject.next(user ? user.fullName : 'Guest');
+    });
+  }
 
   loadBookings() {
     this.execute({ table_name: 'BOOKINGS_TABLE', operation: 'READ' })

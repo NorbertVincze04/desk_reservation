@@ -1,7 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { BookingService } from '../../../core/services/booking.service';
 import { Booking } from '../../../core/models/booking';
-import { Subscription, combineLatest } from 'rxjs';
+import { Subject, combineLatest } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-table',
@@ -10,23 +11,26 @@ import { Subscription, combineLatest } from 'rxjs';
 })
 export class TableComponent implements OnInit, OnDestroy {
   bookings: Booking[] = [];
-  private subscription: Subscription = new Subscription();
+  private destroy$ = new Subject<void>();
 
   constructor(private bookingService: BookingService) {}
 
   ngOnInit() {
-    this.subscription = combineLatest([
+    combineLatest([
       this.bookingService.bookings$,
       this.bookingService.selectedDate$,
-    ]).subscribe(([allBookings, selectedDate]) => {
-      this.bookings = selectedDate
-        ? allBookings.filter((b) => this.sameDay(b.date, selectedDate))
-        : [];
-    });
+    ])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(([allBookings, selectedDate]) => {
+        this.bookings = selectedDate
+          ? allBookings.filter((b) => this.sameDay(b.date, selectedDate))
+          : [];
+      });
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   private sameDay(a: Date | undefined, b: Date | null): boolean {

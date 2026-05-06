@@ -1,6 +1,23 @@
 <app-shadow-box>
   <header>
-    <a routerLink="/booking"><h3>Booking App</h3></a>
-    <i class="fas fa-building fa-lg" style="color: #000000"></i>
+    <a [routerLink]="currentUser ? '/booking' : '/login'"
+      ><h3>Booking App</h3></a
+    >
+    <div class="right">
+      <a *ngIf="!currentUser" routerLink="/login"><h4>Sign In</h4></a>
+      <span *ngIf="currentUser" class="user-name"
+        ><h4>{{ currentUser.fullName }}</h4></span
+      >
+      <a *ngIf="currentUser" (click)="signOut()"
+        ><i
+          class="fas fa-lg"
+          [class.fa-door-closed]="!isHovered"
+          [class.fa-door-open]="isHovered"
+          (mouseenter)="isHovered = true"
+          (mouseleave)="isHovered = false"
+          style="color: #000000; cursor: pointer"
+        ></i
+      ></a>
+    </div>
   </header>
 </app-shadow-box>

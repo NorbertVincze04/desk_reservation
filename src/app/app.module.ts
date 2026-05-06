@@ -23,6 +23,10 @@ import { MockInterceptService } from './core/interceptors/mock-intercept.service
 import { NotFoundComponent } from './features/not-found/not-found.component';
 import { BookingComponent } from './features/booking/booking.component';
 import { InformationComponent } from './features/information/information.component';
+import { SignInComponent } from './core/auth/sign-in/sign-in.component';
+import { RegisterComponent } from './core/auth/register/register.component';
+import { TempPassComponent } from './core/auth/temp-pass/temp-pass.component';
+import { ResetPassComponent } from './core/auth/reset-pass/reset-pass.component';
 
 @NgModule({
   declarations: [
@@ -30,6 +34,10 @@ import { InformationComponent } from './features/information/information.compone
     NotFoundComponent,
     BookingComponent,
     InformationComponent,
+    SignInComponent,
+    RegisterComponent,
+    TempPassComponent,
+    ResetPassComponent,
   ],
   imports: [
     BrowserModule,
