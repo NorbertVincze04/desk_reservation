@@ -210,4 +210,41 @@ export class BookingService {
       (b) => b.user === user && b.date.toDateString() === date.toDateString(),
     );
   }
+
+  updateBooking(booking: Booking): Observable<boolean> {
+    const command = {
+      table_name: 'BOOKINGS_TABLE',
+      operation: 'UPDATE',
+      data: {
+        id: booking.id,
+        user_name: booking.user,
+        booking_date: booking.date.toLocaleDateString(),
+        booking_desk: booking.deskId,
+      },
+    };
+
+    return this.execute(command).pipe(
+      tap((response: any) => {
+        if (response.success) {
+          const updated = this.bookings.map((b) =>
+            b.id === booking.id ? booking : b,
+          );
+          this.bookingsSubject.next(updated);
+
+          this.notificationSubject.next({
+            type: 'success',
+            message: `Booking updated successfully`,
+          });
+        }
+      }),
+      catchError(() => {
+        this.notificationSubject.next({
+          type: 'error',
+          message: 'Failed to update booking',
+        });
+        return of(false);
+      }),
+      map((response: any) => response.success),
+    );
+  }
 }

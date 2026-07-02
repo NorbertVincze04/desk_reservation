@@ -1,0 +1,3 @@
+admin dashboard:
+    -create booking: fetch existing users and have the possibility to search them in the selector (if user with the typed name doesn't exist just create the booking with that name)
+    -style table according to web style

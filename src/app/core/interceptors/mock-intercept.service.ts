@@ -56,6 +56,19 @@ export class MockInterceptService implements HttpInterceptor {
       case 'READ':
         const mockBookings = localStorage.getItem(environment.BOOKING_STORAGE);
         this.mockBookings = mockBookings ? JSON.parse(mockBookings) : [];
+
+        // Remove past bookings
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Reset time to midnight
+
+        this.mockBookings = this.mockBookings.filter((b) => {
+          const bookingDate = new Date(b.booking_date);
+          bookingDate.setHours(0, 0, 0, 0);
+          return bookingDate >= today;
+        });
+
+        this.saveToStorage();
+
         responsePayload = {
           success: true,
           payload: this.mockBookings,
@@ -63,14 +76,30 @@ export class MockInterceptService implements HttpInterceptor {
         break;
 
       case 'CREATE':
+        const bookingDate = new Date(body.data.booking_date);
+        bookingDate.setHours(0, 0, 0, 0);
+
+        const todayCreate = new Date();
+        todayCreate.setHours(0, 0, 0, 0); // Reset time to midnight
+
+        if (bookingDate < todayCreate) {
+          responsePayload = {
+            success: false,
+            message: 'Cannot create bookings in the past',
+          };
+          break;
+        }
+
         const newBooking: MockBooking = {
           id: Date.now().toString(),
           user_name: body.data.user_name,
           booking_date: body.data.booking_date,
           booking_desk: body.data.booking_desk,
         };
+
         this.mockBookings.push(newBooking);
         this.saveToStorage();
+
         responsePayload = {
           success: true,
           payload: newBooking,
@@ -85,6 +114,33 @@ export class MockInterceptService implements HttpInterceptor {
           responsePayload = {
             success: true,
             payload: { deleted: true },
+          };
+        } else {
+          responsePayload = {
+            success: false,
+            message: 'Booking not found',
+          };
+        }
+        break;
+
+      case 'UPDATE':
+        const updateIndex = this.mockBookings.findIndex(
+          (b) => b.id === body.data.id,
+        );
+
+        if (updateIndex !== -1) {
+          this.mockBookings[updateIndex] = {
+            id: body.data.id,
+            user_name: body.data.user_name,
+            booking_date: body.data.booking_date,
+            booking_desk: body.data.booking_desk,
+          };
+
+          this.saveToStorage();
+
+          responsePayload = {
+            success: true,
+            payload: this.mockBookings[updateIndex],
           };
         } else {
           responsePayload = {
