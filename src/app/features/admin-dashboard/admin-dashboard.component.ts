@@ -81,6 +81,15 @@ export class AdminDashboardComponent {
     const b = this.editingBooking();
     if (!b) return;
 
+    // Prevent weekend bookings (Saturday=6, Sunday=0)
+    const day = b.date.getDay();
+    if (day === 0 || day === 6) {
+      this.errorMessage.set(
+        'Bookings cannot be created for Saturday or Sunday.',
+      );
+      return;
+    }
+
     if (this.creating()) {
       // CREATE - prevent double-booking same desk/date
       if (this.isCollision(b)) {
@@ -134,6 +143,15 @@ export class AdminDashboardComponent {
     if (booking) {
       booking.date = new Date(event);
       this.editingBooking.set({ ...booking });
+      // Validate weekends immediately
+      const day = booking.date.getDay();
+      if (day === 0 || day === 6) {
+        this.errorMessage.set(
+          'Bookings cannot be created for Saturday or Sunday.',
+        );
+      } else {
+        this.errorMessage.set(null);
+      }
     }
   }
 
