@@ -1,65 +1,84 @@
-<h2>Admin Booking Management</h2>
+<app-shadow-box>
+  <div class="admin-dashboard">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>User</th>
+          <th>Desk</th>
+          <th>Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
 
-<table class="admin-table">
-  <thead>
-    <tr>
-      <th>User</th>
-      <th>Desk</th>
-      <th>Date</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
+      <tbody>
+        <tr *ngFor="let b of bookings()">
+          <td>{{ b.user }}</td>
+          <td>{{ b.deskId }}</td>
+          <td>{{ b.date | date }}</td>
+          <td>
+            <button (click)="startEdit(b)">Edit</button>
+            <button (click)="deleteBooking(b)">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
 
-  <tbody>
-    <tr *ngFor="let b of bookings()">
-      <td>{{ b.user }}</td>
-      <td>{{ b.deskId }}</td>
-      <td>{{ b.date | date }}</td>
-      <td>
-        <button (click)="startEdit(b)">Edit</button>
-        <button (click)="deleteBooking(b)">Delete</button>
-      </td>
-    </tr>
-  </tbody>
-</table>
+    <button class="create-btn" (click)="startCreate()">Create Booking</button>
 
-<button class="create-btn" (click)="startCreate()">Create Booking</button>
+    <div class="modal" *ngIf="editingBooking() as booking">
+      <div class="modal-content">
+        <h3>{{ creating() ? "Create Booking" : "Edit Booking" }}</h3>
 
-<div class="modal" *ngIf="editingBooking() as booking">
-  <div class="modal-content">
-    <h3>{{ creating() ? "Create Booking" : "Edit Booking" }}</h3>
+        <label>User:</label>
+        <!-- searchable selector: typing or scrolling via datalist; allows new names -->
+        <input
+          type="text"
+          list="users-list"
+          [(ngModel)]="userSearch"
+          (ngModelChange)="booking.user = $event"
+          placeholder="Type or choose a user"
+        />
+        <datalist id="users-list">
+          <option *ngFor="let u of allUsers" [value]="u"></option>
+        </datalist>
 
-    <label>User:</label>
-    <select [(ngModel)]="booking.user">
-      <option *ngFor="let u of users" [value]="u">{{ u }}</option>
-    </select>
+        <label>Office Group:</label>
+        <select
+          [ngModel]="selectedGroup()"
+          (ngModelChange)="updateGroup($event)"
+        >
+          <option *ngFor="let g of officeGroups" [value]="g">{{ g }}</option>
+        </select>
 
-    <label>Office Group:</label>
-    <select [ngModel]="selectedGroup()" (ngModelChange)="updateGroup($event)">
-      <option *ngFor="let g of officeGroups" [value]="g">{{ g }}</option>
-    </select>
+        <label>Desk Number:</label>
+        <select
+          [ngModel]="selectedNumber()"
+          (ngModelChange)="updateNumber($event)"
+        >
+          <option *ngFor="let n of deskNumbers" [value]="n">{{ n }}</option>
+        </select>
 
-    <label>Desk Number:</label>
-    <select [ngModel]="selectedNumber()" (ngModelChange)="updateNumber($event)">
-      <option *ngFor="let n of deskNumbers" [value]="n">{{ n }}</option>
-    </select>
+        <p>
+          Selected Desk:
+          <strong>{{ selectedGroup() }}{{ selectedNumber() }}</strong>
+        </p>
 
-    <p>
-      Selected Desk:
-      <strong>{{ selectedGroup() }}{{ selectedNumber() }}</strong>
-    </p>
+        <label>Date:</label>
+        <input
+          type="date"
+          [min]="todayString"
+          [ngModel]="booking.date | date: 'yyyy-MM-dd'"
+          (ngModelChange)="updateDate($event)"
+        />
 
-    <label>Date:</label>
-    <input
-      type="date"
-      [min]="todayString"
-      [ngModel]="booking.date | date: 'yyyy-MM-dd'"
-      (ngModelChange)="updateDate($event)"
-    />
-
-    <div class="modal-actions">
-      <button (click)="saveBooking()">Save</button>
-      <button (click)="cancelEdit()">Cancel</button>
+        <div class="modal-actions">
+          <button (click)="saveBooking()">Save</button>
+          <button (click)="cancelEdit()">Cancel</button>
+        </div>
+        <div class="error-text" *ngIf="errorMessage()">
+          {{ errorMessage() }}
+        </div>
+      </div>
     </div>
   </div>
-</div>
+</app-shadow-box>

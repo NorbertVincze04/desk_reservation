@@ -27,6 +27,13 @@ export class AuthService {
     }
   }
 
+  /**
+   * Return all stored users. Caller should not mutate returned array.
+   */
+  getAllUsers(): UserRecord[] {
+    return this.loadUsers();
+  }
+
   get userRole() {
     return this.currentUserSubject.value?.type;
   }

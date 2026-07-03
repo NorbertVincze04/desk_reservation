@@ -1,3 +1,9 @@
+.admin-dashboard {
+  height: 83dvh;
+  margin-top: 25px;
+  padding: 20px;
+}
+
 .admin-table {
   width: 100%;
   border-collapse: collapse;
@@ -12,6 +18,41 @@
 
 .create-btn {
   margin-bottom: 20px;
+}
+
+/* App-aligned styling */
+.admin-table th {
+  background: #f5f9fc;
+  color: #007bc0;
+  text-align: left;
+}
+
+.create-btn {
+  background-color: #007bc0;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.create-btn:hover {
+  background-color: #005f8a;
+}
+
+button[ng-reflect-ng-class],
+button {
+  background: transparent;
+  border: 1px solid #007bc0;
+  color: #007bc0;
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #007bc0;
+  color: white;
 }
 
 .modal {
@@ -29,12 +70,82 @@
 .modal-content {
   background: white;
   padding: 20px;
-  width: 300px;
-  border-radius: 6px;
+  width: 420px;
+  max-width: calc(100% - 40px);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
 }
 
 .modal-actions {
   margin-top: 20px;
   display: flex;
   justify-content: space-between;
+}
+
+.error-text {
+  color: #c62828;
+  margin-top: 12px;
+  font-size: 0.95rem;
+}
+
+.modal-content h3 {
+  margin: 0 0 12px 0;
+  padding-bottom: 8px;
+  color: #007bc0;
+  border-bottom: 1px solid #eef6fb;
+  font-size: 1.1rem;
+}
+
+.modal-content label {
+  display: block;
+  margin-top: 12px;
+  margin-bottom: 6px;
+  color: #333;
+  font-weight: 600;
+}
+
+.modal-content input[type="text"],
+.modal-content input[type="date"],
+.modal-content select {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #d7eaf3;
+  border-radius: 6px;
+  background: #fbfeff;
+  box-sizing: border-box;
+}
+
+.modal-content p {
+  margin: 10px 0 0 0;
+}
+
+.modal-content .modal-actions button:first-child {
+  background-color: #007bc0;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+}
+
+.modal-content .modal-actions button:last-child {
+  background: transparent;
+  border: 1px solid #cfeffb;
+  color: #007bc0;
+}
+
+.modal-content .modal-actions button:first-child,
+.modal-content .modal-actions button:last-child {
+  transition:
+    background-color 0.15s ease,
+    transform 0.12s ease;
+}
+
+.modal-content .modal-actions button:first-child:hover {
+  background-color: #005f8a;
+  transform: translateY(-1px);
+}
+
+.modal-content .modal-actions button:last-child:hover {
+  background-color: #e9f8ff;
+  color: #005f8a;
+  transform: translateY(-1px);
 }
