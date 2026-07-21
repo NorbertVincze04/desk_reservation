@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
 import { UserRepository } from "../repositories/UserRepository.ts";
-import { generateToken, verifyToken } from "../utils/jwt.utils.ts";
+import { generateToken } from "../utils/jwt.utils.ts";
 import { generateTempPasswordString } from "../utils/password.utils.ts";
 import type { UserPayload } from "../types/user.types.ts";
 

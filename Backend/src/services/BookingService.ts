@@ -24,8 +24,4 @@ export class BookingService {
   static async deleteBooking(id: number): Promise<number | null> {
     return BookingRepository.deleteBooking(id);
   }
-
-  static async getBookingById(id: number): Promise<Booking | null> {
-    return BookingRepository.getBookingById(id);
-  }
 }

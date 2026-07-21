@@ -15,19 +15,6 @@ export class UserRepository {
     return result.rows[0] || null;
   }
 
-  static async findById(id: number): Promise<UserRecord | null> {
-    const result = await pool.query(
-      `
-      SELECT id, full_name, email, password_hash, temp_password_hash, secret_key, type
-      FROM users
-      WHERE id = $1
-      `,
-      [id],
-    );
-
-    return result.rows[0] || null;
-  }
-
   static async create(
     fullName: string,
     email: string,

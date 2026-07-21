@@ -1,5 +1,9 @@
 import { Router } from "express";
 import { AuthController } from "../controllers/AuthController.ts";
+import {
+  adminMiddleware,
+  authMiddleware,
+} from "../middleware/auth.middleware.ts";
 
 export const authRouter = Router();
 
@@ -15,4 +19,6 @@ authRouter.post("/temp-password", (req, res) =>
   AuthController.generateTempPassword(req, res),
 );
 
-authRouter.get("/users", (req, res) => AuthController.getUsers(req, res));
+authRouter.get("/users", authMiddleware, adminMiddleware, (req, res) =>
+  AuthController.getUsers(req, res),
+);

@@ -70,17 +70,4 @@ export class BookingRepository {
 
     return result.rows[0]?.id || null;
   }
-
-  static async getBookingById(id: number): Promise<Booking | null> {
-    const result = await pool.query(
-      `
-      SELECT id, user_name, booking_date, booking_desk
-      FROM bookings
-      WHERE id = $1
-      `,
-      [id],
-    );
-
-    return result.rows[0] || null;
-  }
 }
