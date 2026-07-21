@@ -1,5 +1,13 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, map, tap } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
+import {
+  BehaviorSubject,
+  Observable,
+  map,
+  tap,
+  type MonoTypeOperatorFunction,
+} from 'rxjs';
+import { catchError, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { UserRecord } from '../models/user-record';
@@ -25,6 +33,32 @@ export class AuthService {
     return this.currentUserSubject.value?.type;
   }
 
+  private extractErrorMessage(error: unknown): string {
+    if (error instanceof HttpErrorResponse) {
+      const backendMessage = error.error?.message;
+
+      if (typeof backendMessage === 'string' && backendMessage.trim()) {
+        return backendMessage;
+      }
+
+      if (typeof error.message === 'string' && error.message.trim()) {
+        return error.message;
+      }
+    }
+
+    if (error instanceof Error && error.message.trim()) {
+      return error.message;
+    }
+
+    return 'Something went wrong. Please try again.';
+  }
+
+  private rethrowApiError<T>(): MonoTypeOperatorFunction<T> {
+    return catchError((error: unknown) =>
+      throwError(() => new Error(this.extractErrorMessage(error))),
+    );
+  }
+
   getAllUsers(): Observable<UserRecord[]> {
     return this.http.get<any>(`${this.authUrl}/users`).pipe(
       map((response) => {
@@ -43,9 +77,10 @@ export class AuthService {
     password: string;
     secretKey: string;
   }): Observable<boolean> {
-    return this.http
-      .post<any>(`${this.authUrl}/register`, userData)
-      .pipe(map((response) => !!response.success));
+    return this.http.post<any>(`${this.authUrl}/register`, userData).pipe(
+      map((response) => !!response.success),
+      this.rethrowApiError(),
+    );
   }
 
   login(
@@ -80,6 +115,7 @@ export class AuthService {
         map((response) => ({
           isTempPassword: !!response.payload?.isTempPassword,
         })),
+        this.rethrowApiError(),
       );
   }
 
@@ -100,7 +136,10 @@ export class AuthService {
         email: currentUser.email,
         newPassword,
       })
-      .pipe(map((response) => !!response.success));
+      .pipe(
+        map((response) => !!response.success),
+        this.rethrowApiError(),
+      );
   }
 
   generateTempPassword(email: string, secretKey: string): Observable<string> {
@@ -109,7 +148,10 @@ export class AuthService {
         email,
         secretKey,
       })
-      .pipe(map((response) => response.payload.tempPassword));
+      .pipe(
+        map((response) => response.payload.tempPassword),
+        this.rethrowApiError(),
+      );
   }
 
   isTokenValid(user: UserRecord | null): boolean {

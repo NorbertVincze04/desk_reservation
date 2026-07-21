@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 import { pool } from "./db.ts";
 
 export async function seedAdminUser(): Promise<void> {
-  const adminEmail = "admin@mail.com";
+  const adminEmail = "admin@gmail.com";
   const adminPassword = "Admin12!";
   const adminSecretKey = "Admin12!";
 
