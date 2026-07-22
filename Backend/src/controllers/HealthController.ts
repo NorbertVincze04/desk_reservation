@@ -2,21 +2,17 @@ import type { Request, Response } from "express";
 import { pool } from "../config/db.ts";
 
 export class HealthController {
-  static async testConnection(req: Request, res: Response): Promise<Response> {
+  static async testConnection(_req: Request, res: Response): Promise<void> {
     try {
-      const result = await pool.query("SELECT NOW()");
-
-      return res.json({
-        success: true,
-        message: "Backend is connected to Database",
-        dbTime: result.rows[0].now,
+      await pool.query("SELECT NOW()");
+      res.json({
+        status: "healthy",
+        timestamp: new Date().toISOString(),
       });
     } catch (error) {
-      console.error("Database connection failed:", error);
-
-      return res.status(500).json({
-        success: false,
-        message: "Database connection failed",
+      res.status(503).json({
+        status: "unhealthy",
+        error: error instanceof Error ? error.message : "Unknown error",
       });
     }
   }
