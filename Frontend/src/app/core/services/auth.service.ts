@@ -135,6 +135,6 @@ export class AuthService {
   }
 
   isTokenValid(user: UserRecord | null): boolean {
-    return user ? !!user.token : false;
+    return user ? !!user.token : false; // '!!' to convert to boolean
   }
 }
